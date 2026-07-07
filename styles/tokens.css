@@ -1,0 +1,57 @@
+:root {
+  /* === Core Palette v1.1 === */
+  --ce-ink:    #1A1D2E;
+  --ce-silk:   #EDE4D3;
+  --ce-amber:  #E09A3E;
+  --ce-sky:    #6FB0DF;
+  --ce-moss:   #3E5C4F;
+
+  --ce-line:       rgba(237, 228, 211, 0.16);
+  --ce-ink-soft:   #262B40;
+  --ce-silk-dim:   rgba(237, 228, 211, 0.64);
+  --ce-amber-glow: rgba(224, 154, 62, 0.24);
+  --ce-sky-glow:   rgba(111, 176, 223, 0.20);
+
+  --color-bg:        var(--ce-ink);
+  --color-bg-raised: var(--ce-ink-soft);
+  --color-text:      var(--ce-silk);
+  --color-text-sub:  var(--ce-silk-dim);
+  --color-accent:    var(--ce-amber);
+  --color-accent-2:  var(--ce-sky);
+  --color-border:    var(--ce-line);
+
+  /* Ambient (backgrounds / illustration only, never UI text) */
+  --amb-noon-sky: #A8CFEA;
+  --amb-dusk:     #33427A;
+  --amb-mountain: #5C7A5E;
+  --amb-river:    #4A8C8C;
+  --amb-earth:    #8A6B4F;
+
+  /* Stage bleed (blur only, never solid UI) */
+  --bleed-red:   rgba(216, 74, 58, 0.32);
+  --bleed-green: rgba(72, 196, 138, 0.28);
+  --bleed-haze:  rgba(139, 127, 199, 0.32);
+
+  /* Type */
+  --font-display: "Fraunces", "Shippori Mincho B1", serif;
+  --font-body: "Karla", "Zen Kaku Gothic New", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+
+  --text-h1:      clamp(2.75rem, 7vw, 5rem);
+  --text-h2:      clamp(2rem, 4.5vw, 3rem);
+  --text-h3:      1.5rem;
+  --text-body:    1.0625rem;
+  --text-caption: 0.8125rem;
+
+  --leading-display: 1.1;
+  --leading-body-ja: 1.9;
+  --leading-body-en: 1.65;
+  --tracking-caption: 0.08em;
+
+  /* Motion */
+  --beat: 500ms;
+  --beat-half: 250ms;
+  --beat-2: 1000ms;
+  --ease-drift: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-swell: cubic-bezier(0.4, 0, 0.2, 1);
+}
