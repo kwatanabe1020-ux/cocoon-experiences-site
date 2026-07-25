@@ -50,6 +50,13 @@ hr.rule { border: none; height: 1px; background: var(--color-border); margin: 0;
 }
 .nav-logo { display: flex; align-items: center; gap: 10px; }
 .nav-logo img { height: 34px; width: auto; }
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 560;
+  letter-spacing: 0.02em;
+  color: var(--color-text);
+}
 .nav-links { display: flex; gap: 1.75rem; font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; }
 .nav-links a { color: var(--color-text-sub); transition: color var(--beat-half) var(--ease-drift); }
 .nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--ce-amber); }
