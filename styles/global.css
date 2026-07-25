@@ -3,7 +3,7 @@
 @font-face { font-family: "Fraunces"; src: local("Fraunces"); }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 body {
   margin: 0;
@@ -129,7 +129,7 @@ hr.rule { border: none; height: 1px; background: var(--color-border); margin: 0;
 }
 
 /* === Stage bleed (blurred lighting behind UI) === */
-.stage-bleed { position: relative; isolation: isolate; }
+.stage-bleed { position: relative; isolation: isolate; overflow: hidden; }
 .stage-bleed::before {
   content: "";
   position: absolute; inset: -10%;
@@ -162,7 +162,6 @@ hr.rule { border: none; height: 1px; background: var(--color-border); margin: 0;
   background: linear-gradient(180deg, rgba(20,28,26,0.55) 0%, rgba(24,30,30,0.82) 55%, var(--ce-ink) 100%);
 }
 .hero-inner { position: relative; z-index: 1; text-align: center; }
-.hero .eyebrow { margin-bottom: 1rem; color: var(--ce-amber); }
 .hero h1 { max-width: 14ch; margin: 0 auto 1.25rem; }
 .hero .sub { color: var(--color-text-sub); max-width: 46ch; font-size: 1.05rem; margin: 0 auto 1.1em; }
 .hero .cta-row { display: flex; gap: 0.9rem; margin-top: 2.2rem; flex-wrap: wrap; justify-content: center; }
