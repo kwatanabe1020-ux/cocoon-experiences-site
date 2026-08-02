@@ -6,3 +6,4 @@ wrangler.jsonc
 .gitignore
 design/
 site-renewal-instructions.md
+.DS_Store
