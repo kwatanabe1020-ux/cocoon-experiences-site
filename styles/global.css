@@ -107,7 +107,11 @@ hr.rule { border: none; height: 1px; background: var(--color-border); margin: 0;
 .icon-link:last-child::after { left: auto; right: 0; transform: translateY(4px); }
 .icon-link:hover::after, .icon-link:focus-visible::after { opacity: 1; }
 
-.nav.nav--icons { justify-content: center; }
+.nav.nav--icons {
+  justify-content: center;
+  background: var(--ce-ink);
+  backdrop-filter: none;
+}
 
 @media (max-width: 380px) {
   .nav.nav--icons { padding-left: 0.75rem; padding-right: 0.75rem; }
