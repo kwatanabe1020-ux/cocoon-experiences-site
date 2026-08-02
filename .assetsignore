@@ -7,3 +7,4 @@ wrangler.jsonc
 design/
 site-renewal-instructions.md
 .DS_Store
+scripts/build-news.py
