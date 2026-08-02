@@ -4,3 +4,5 @@
 wrangler.jsonc
 .assetsignore
 .gitignore
+design/
+site-renewal-instructions.md
