@@ -132,6 +132,10 @@ hr.rule { border: none; height: 1px; background: var(--color-border); margin: 0;
 .reveal-group > *:nth-child(2) { transition-delay: 125ms; }
 .reveal-group > *:nth-child(3) { transition-delay: 250ms; }
 .reveal-group > *:nth-child(4) { transition-delay: 375ms; }
+.reveal-group > *:nth-child(5) { transition-delay: 500ms; }
+.reveal-group > *:nth-child(6) { transition-delay: 625ms; }
+.reveal-group > *:nth-child(7) { transition-delay: 750ms; }
+.reveal-group > *:nth-child(8) { transition-delay: 875ms; }
 
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: opacity var(--beat-half) ease; }
@@ -225,6 +229,25 @@ hr.rule { border: none; height: 1px; background: var(--color-border); margin: 0;
 .card .caption { margin-bottom: 0.6rem; }
 .card h3 { margin-bottom: 0.6rem; }
 .card p { color: var(--color-text-sub); font-size: 0.95rem; margin-bottom: 0; }
+
+/* === News list / detail === */
+.news-card-list { display: flex; flex-direction: column; gap: 1.5rem; max-width: 68ch; }
+.news-card {
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.75rem;
+}
+.news-card .date { display: block; margin-bottom: 0.6rem; }
+.news-card h2 { font-size: var(--text-h3); margin-bottom: 0.6rem; }
+.news-card p { color: var(--color-text-sub); margin-bottom: 0.9rem; }
+.news-card .read-more { font-family: var(--font-mono); font-size: var(--text-caption); letter-spacing: var(--tracking-caption); text-transform: uppercase; color: var(--color-text-sub); transition: color var(--beat-half) var(--ease-drift); }
+.news-card .read-more:hover, .news-card .read-more:focus-visible { color: var(--ce-amber); }
+
+.news-detail-body { max-width: 64ch; }
+.news-detail-body p { white-space: pre-line; }
+.news-detail-body p.en { color: var(--color-text-sub); }
+.news-headlines { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--color-border); max-width: 64ch; }
 
 .photo-frame { border-radius: 12px; overflow: hidden; }
 .photo-frame img {
