@@ -1,0 +1,169 @@
+/* === Hero scene: time-of-day + weather (index.html hero only) === */
+
+/* Layer stack inside .hero (z-index order):
+   0  .hero-photo         existing forest illustration
+   1  .hero-tint          time-of-day mood color wash
+   2  .hero-photo::after  existing constant legibility darkening (untouched)
+   3  .hero-sun / .hero-moon / .hero-stars
+   4  .hero-rain / .hero-fog
+   5  .hero-trees-fg / .hero-mushrooms
+   10 .hero-inner         logo + news (bumped above the scene layers) */
+
+.hero-inner { z-index: 10; }
+.hero-inner::before {
+  content: "";
+  position: absolute; inset: -12% -25%;
+  z-index: -1;
+  background: radial-gradient(58% 55% at 50% 42%, rgba(26,29,46,0.55), transparent 75%);
+  pointer-events: none;
+}
+
+.hero-tint,
+.hero-sun, .hero-moon, .hero-stars,
+.hero-rain, .hero-fog,
+.hero-trees-fg, .hero-mushrooms {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* --- time-of-day tint (derived from VLG ambient tokens) --- */
+.hero-tint {
+  inset: 0; z-index: 1;
+  opacity: 0;
+  transition: opacity 1.2s ease, background 1.2s ease;
+}
+.hero[data-time] .hero-tint { opacity: 1; }
+.hero[data-time="morning"] .hero-tint {
+  /* amb-noon-sky + amber sunrise warmth */
+  background: linear-gradient(180deg, rgba(224,154,62,0.20) 0%, rgba(168,207,234,0.14) 45%, transparent 85%);
+}
+.hero[data-time="midday"] .hero-tint {
+  /* amb-noon-sky, bright and clear */
+  background: linear-gradient(180deg, rgba(168,207,234,0.16) 0%, transparent 60%);
+}
+.hero[data-time="evening"] .hero-tint {
+  /* amb-dusk + amber sunset */
+  background: linear-gradient(180deg, rgba(224,154,62,0.26) 0%, rgba(51,66,122,0.30) 55%, transparent 90%);
+}
+.hero[data-time="night"] .hero-tint {
+  /* amb-dusk deepening to ink */
+  background: linear-gradient(180deg, rgba(51,66,122,0.16) 0%, rgba(26,29,46,0.30) 65%, transparent 100%);
+}
+
+/* --- sun / moon --- */
+.hero-sun, .hero-moon {
+  z-index: 3;
+  width: 46px; height: 46px;
+  left: var(--cx, 50%); top: var(--cy, 20%);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 1.2s ease, left 1.2s linear, top 1.2s linear;
+}
+.hero-sun {
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(224,154,62,0.95) 0%, rgba(224,154,62,0.55) 42%, rgba(224,154,62,0) 72%);
+  box-shadow: 0 0 46px 12px rgba(224,154,62,0.30);
+}
+.hero-moon svg { width: 100%; height: 100%; }
+.hero-moon .moon-body { fill: var(--ce-silk); }
+.hero-moon .moon-shadow { fill: var(--ce-ink); }
+.hero-moon { filter: drop-shadow(0 0 18px rgba(237,228,211,0.35)); }
+
+.hero[data-time="morning"] .hero-sun,
+.hero[data-time="midday"] .hero-sun,
+.hero[data-time="evening"] .hero-sun { opacity: 1; }
+.hero[data-time="night"] .hero-moon { opacity: 1; }
+
+/* --- stars (night only) --- */
+.hero-stars {
+  top: 0; left: 0; right: 0; height: 55%; z-index: 3;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.hero-stars svg { width: 100%; height: 100%; display: block; }
+.hero[data-time="night"] .hero-stars { opacity: 1; }
+.hero-stars circle { fill: var(--ce-silk); animation: star-twinkle 3.5s var(--ease-swell) infinite; }
+.hero-stars circle:nth-child(3n) { animation-duration: 5.5s; }
+.hero-stars circle:nth-child(4n) { animation-duration: 6.5s; animation-direction: reverse; }
+@keyframes star-twinkle { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.9; } }
+
+/* --- rain --- */
+.hero-rain {
+  inset: 0; z-index: 4;
+  opacity: 0;
+  background-image: repeating-linear-gradient(112deg,
+    rgba(237,228,211,0.38) 0px, rgba(237,228,211,0.38) 1px,
+    transparent 1px, transparent 15px);
+  background-size: 100% 220%;
+  transition: opacity 0.8s ease;
+  animation: rain-fall 0.55s linear infinite;
+}
+.hero[data-weather="rain"] .hero-rain { opacity: 0.55; }
+@keyframes rain-fall { from { background-position: 0 0; } to { background-position: 0 42px; } }
+
+/* --- fog --- */
+.hero-fog {
+  inset: -12%; z-index: 4;
+  opacity: 0;
+  background:
+    radial-gradient(46% 30% at 18% 68%, rgba(237,228,211,0.28), transparent 72%),
+    radial-gradient(50% 34% at 78% 78%, rgba(237,228,211,0.24), transparent 72%),
+    radial-gradient(40% 26% at 50% 55%, rgba(237,228,211,0.16), transparent 72%);
+  filter: blur(26px);
+  transition: opacity 1.2s ease;
+  animation: fog-drift 11s var(--ease-swell) infinite;
+}
+.hero[data-weather="fog"] .hero-fog { opacity: 1; }
+@keyframes fog-drift { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3.5%); } }
+
+/* --- wind trees (foreground silhouettes) --- */
+.hero-trees-fg {
+  left: 0; right: 0; bottom: 0; z-index: 5;
+  width: 100%; height: 14vh; min-height: 90px; max-height: 160px;
+}
+.hero-trees-fg svg { width: 100%; height: 100%; display: block; }
+.wind-tree { fill: var(--ce-ink); opacity: 0.6; transform-box: fill-box; transform-origin: bottom center; }
+.hero[data-weather="windy"] .wind-tree:nth-of-type(1) { animation: tree-sway 3.5s var(--ease-swell) infinite; }
+.hero[data-weather="windy"] .wind-tree:nth-of-type(2) { animation: tree-sway 6.5s var(--ease-swell) infinite reverse; }
+.hero[data-weather="windy"] .wind-tree:nth-of-type(3) { animation: tree-sway 5.5s var(--ease-swell) infinite; }
+.hero[data-weather="windy"] .wind-tree:nth-of-type(4) { animation: tree-sway 3.5s var(--ease-swell) infinite reverse; }
+.hero[data-weather="windy"] .wind-tree:nth-of-type(5) { animation: tree-sway 6.5s var(--ease-swell) infinite; }
+@keyframes tree-sway { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(2.2deg); } }
+
+/* --- mushrooms --- */
+.hero-mushrooms {
+  left: 0; right: 0; bottom: 0; z-index: 5;
+  width: 100%; height: 8vh; min-height: 46px; max-height: 90px;
+}
+.hero-mushrooms svg { width: 100%; height: 100%; display: block; }
+.mushroom { transform: scaleY(0.1); opacity: 0; transform-box: fill-box; transform-origin: bottom center; }
+.mushroom .cap { fill: var(--ce-amber); }
+.mushroom .spot { fill: var(--ce-sky); }
+.mushroom .stem { fill: var(--ce-silk); }
+.hero[data-mushroom="true"] .mushroom {
+  animation: mushroom-grow 2.2s var(--ease-drift) forwards;
+}
+.hero[data-mushroom="true"] .mushroom:nth-of-type(2) { animation-delay: 0.6s; }
+.hero[data-mushroom="true"] .mushroom:nth-of-type(3) { animation-delay: 1.3s; }
+@keyframes mushroom-grow {
+  0% { transform: scaleY(0.05); opacity: 0; }
+  65% { transform: scaleY(1.08); opacity: 1; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-stars circle { animation: none !important; opacity: 0.7 !important; }
+  .hero-rain,
+  .hero[data-weather="rain"] .hero-rain { animation: none !important; opacity: 0 !important; }
+  .hero-fog,
+  .hero[data-weather="fog"] .hero-fog { animation: none !important; }
+  .wind-tree { animation: none !important; }
+  .mushroom { animation: none !important; transform: scaleY(1) !important; opacity: 0 !important; }
+  .hero[data-mushroom="true"] .mushroom { opacity: 1 !important; }
+  .hero-sun, .hero-moon { transition: opacity 0.3s ease !important; }
+}
+
+@media (max-width: 560px) {
+  .hero-sun, .hero-moon { width: 34px; height: 34px; }
+  .hero-trees-fg { height: 11vh; }
+}
