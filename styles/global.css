@@ -285,7 +285,7 @@ footer .foot-row { display: flex; justify-content: space-between; align-items: c
 footer .foot-links { display: flex; gap: 1.5rem; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; }
 footer .foot-links a:hover { color: var(--ce-amber); }
 .footer-minimal { padding: 2.5rem 0; text-align: center; }
-.footer-minimal p { margin: 0 0 0.4em; }
+.footer-minimal p { margin: 0 auto 0.4em; }
 .footer-minimal p:last-child { margin-bottom: 0; }
 .footer-minimal a { color: var(--color-text-sub); transition: color var(--beat-half) var(--ease-drift); }
 .footer-minimal a:hover, .footer-minimal a:focus-visible { color: var(--ce-amber); }
