@@ -107,8 +107,10 @@ hr.rule { border: none; height: 1px; background: var(--color-border); margin: 0;
 .icon-link:last-child::after { left: auto; right: 0; transform: translateY(4px); }
 .icon-link:hover::after, .icon-link:focus-visible::after { opacity: 1; }
 
-@media (max-width: 480px) {
-  .nav.nav--icons { flex-direction: column; gap: 0.75rem; padding: 1rem 0.5rem; }
+.nav.nav--icons { justify-content: center; }
+
+@media (max-width: 380px) {
+  .nav.nav--icons { padding-left: 0.75rem; padding-right: 0.75rem; }
 }
 
 /* === Buttons / links with hover glow === */
@@ -257,6 +259,17 @@ hr.rule { border: none; height: 1px; background: var(--color-border); margin: 0;
   width: 100%; height: 100%; object-fit: cover;
   filter: saturate(0.92) contrast(0.96) sepia(0.08);
 }
+.video-link { position: relative; }
+.play-badge {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 64px; height: 64px; border-radius: 50%;
+  background: rgba(26, 29, 46, 0.55); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ce-silk);
+  transition: background var(--beat-half) var(--ease-drift), color var(--beat-half) var(--ease-drift);
+}
+.play-badge svg { width: 28px; height: 28px; margin-left: 3px; }
+.video-link:hover .play-badge, .video-link:focus-visible .play-badge { background: var(--ce-amber-glow); color: var(--ce-amber); }
 
 footer {
   border-top: 1px solid var(--color-border);

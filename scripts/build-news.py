@@ -42,7 +42,7 @@ NAV_ICONS = """<nav class="nav nav--icons">
 
 FOOTER = """<footer class="footer-minimal">
   <div class="wrap">
-    <p class="caption" lang="en">Instrumental psych from Fussa, west Tokyo.</p>
+    <p class="caption" lang="en">CINEMATIC EXPERIENCE INSTRUMENTAL JAM from Fussa, west Tokyo.</p>
     <p class="caption">contact: <a href="mailto:cocoon.exs@gmail.com">cocoon.exs@gmail.com</a></p>
   </div>
 </footer>"""
