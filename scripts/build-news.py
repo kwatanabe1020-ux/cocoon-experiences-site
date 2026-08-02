@@ -40,24 +40,17 @@ NAV_ICONS = """<nav class="nav nav--icons">
   </div>
 </nav>"""
 
-FOOTER = """<footer>
+FOOTER = """<footer class="footer-minimal">
   <div class="wrap">
-    <div class="foot-row">
-      <div>
-        <img src="/assets/logo.png" alt="Cocoon Experiences" style="height:28px; margin-bottom:0.8rem;">
-        <div class="caption">Tokyo, Japan</div>
-      </div>
-      <div class="foot-links">
-        <a href="https://instagram.com/cocoon.exs" target="_blank" rel="noopener">Instagram</a>
-        <a href="https://www.youtube.com/@cocoonexs" target="_blank" rel="noopener">YouTube</a>
-        <a href="mailto:booking@cocoon-experiences.example">Booking</a>
-      </div>
-    </div>
+    <p class="caption" lang="en">Instrumental psych from Fussa, west Tokyo.</p>
+    <p class="caption">contact: <a href="mailto:cocoon.exs@gmail.com">cocoon.exs@gmail.com</a></p>
   </div>
 </footer>"""
 
 HEAD_LINKS = """<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Shippori+Mincho+B1:wght@600;800&family=Karla:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Shippori+Mincho+B1:wght@600;800&family=Karla:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Shippori+Mincho+B1:wght@600;800&family=Karla:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap"></noscript>
 <link rel="stylesheet" href="/styles/global.css">"""
 
 

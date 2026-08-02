@@ -33,6 +33,7 @@ h2 { font-size: var(--text-h2); font-weight: 520; line-height: var(--leading-dis
 h3 { font-size: var(--text-h3); font-weight: 500; line-height: 1.3; }
 p { margin: 0 0 1.1em; max-width: 62ch; }
 a { color: inherit; text-decoration: none; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--ce-sky); outline-offset: 2px; }
 
 img { max-width: 100%; display: block; }
 
@@ -102,6 +103,8 @@ hr.rule { border: none; height: 1px; background: var(--color-border); margin: 0;
   opacity: 0; pointer-events: none;
   transition: opacity var(--beat-half) var(--ease-drift);
 }
+.icon-link:first-child::after { left: 0; transform: translateY(4px); }
+.icon-link:last-child::after { left: auto; right: 0; transform: translateY(4px); }
 .icon-link:hover::after, .icon-link:focus-visible::after { opacity: 1; }
 
 @media (max-width: 480px) {
@@ -264,6 +267,11 @@ footer {
 footer .foot-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
 footer .foot-links { display: flex; gap: 1.5rem; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; }
 footer .foot-links a:hover { color: var(--ce-amber); }
+.footer-minimal { padding: 2.5rem 0; text-align: center; }
+.footer-minimal p { margin: 0 0 0.4em; }
+.footer-minimal p:last-child { margin-bottom: 0; }
+.footer-minimal a { color: var(--color-text-sub); transition: color var(--beat-half) var(--ease-drift); }
+.footer-minimal a:hover, .footer-minimal a:focus-visible { color: var(--ce-amber); }
 
 @media (max-width: 780px) {
   .grid-3 { grid-template-columns: 1fr; }

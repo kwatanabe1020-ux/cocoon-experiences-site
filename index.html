@@ -3,11 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cocoon Experiences — サイケデリック・ジャムバンド</title>
-<meta name="description" content="Cocoon Experiences（COCOON EXS）は東京を拠点に活動するサイケデリック/ジャム・インストゥルメンタルバンド。反復と微変化によるトランス誘導を軸に、国内外のフェス・レーベルへ向けて発信しています。">
+<title>Cocoon Experiences（cocoon exs）— 福生発、サイケデリック・インストゥルメンタルバンド</title>
+<meta name="description" content="東京・福生を拠点に活動するインストゥルメンタルバンド Cocoon Experiences（cocoon exs）の公式サイト。反復と微変化によるトランス誘導を軸に活動しています。最新情報はNEWSで随時更新。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Cocoon Experiences">
+<meta property="og:title" content="Cocoon Experiences（cocoon exs）">
+<meta property="og:description" content="東京・福生を拠点に活動するインストゥルメンタルバンド Cocoon Experiences（cocoon exs）の公式サイト。">
+<meta property="og:image" content="https://cocoon-experiences-site.cocoonexs.workers.dev/assets/og.jpg">
+<meta property="og:url" content="https://cocoon-experiences-site.cocoonexs.workers.dev/">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Shippori+Mincho+B1:wght@600;800&family=Karla:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Shippori+Mincho+B1:wght@600;800&family=Karla:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Shippori+Mincho+B1:wght@600;800&family=Karla:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap"></noscript>
 <link rel="stylesheet" href="styles/global.css">
+<link rel="preload" as="image" href="assets/logo.png" imagesrcset="assets/logo.png 1x, assets/logo@2x.png 2x" fetchpriority="high">
+<link rel="preload" as="image" href="assets/photos/hero-forest.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MusicGroup",
+  "name": "Cocoon Experiences",
+  "alternateName": "cocoon exs",
+  "genre": "Psychedelic / Jam / Instrumental",
+  "foundingLocation": "Fussa, Tokyo, Japan",
+  "sameAs": [
+    "https://www.youtube.com/@cocoonexs",
+    "https://cocoon-exs.bandcamp.com/",
+    "https://www.tunecore.co.jp/artists/cocoon-e",
+    "https://instagram.com/cocoon.exs",
+    "https://www.facebook.com/profile.php?id=100063178571727"
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -41,7 +70,7 @@
   <div class="hero-photo" style="background-image:url('assets/photos/hero-forest.jpg');"></div>
   <div class="hero-inner wrap">
     <h1 class="sr-only">Cocoon Experiences (cocoon exs)</h1>
-    <img class="hero-logo reveal" src="assets/logo.png" srcset="assets/logo.png 1x, assets/logo@2x.png 2x" width="740" height="399" alt="Cocoon Experiences">
+    <img class="hero-logo reveal" src="assets/logo.png" srcset="assets/logo.png 1x, assets/logo@2x.png 2x" width="740" height="399" alt="Cocoon Experiences" fetchpriority="high">
     <div id="news-list" class="news-list reveal">
       <!-- NEWS:START -->
       <p class="news-empty" lang="ja">まだお知らせはありません。最初の便りをお待ちください。</p>
@@ -62,19 +91,10 @@
   </div>
 </section>
 
-<footer>
+<footer class="footer-minimal">
   <div class="wrap">
-    <div class="foot-row">
-      <div>
-        <img src="assets/logo.png" alt="Cocoon Experiences" style="height:28px; margin-bottom:0.8rem;">
-        <div class="caption">Tokyo, Japan</div>
-      </div>
-      <div class="foot-links">
-        <a href="https://instagram.com/cocoon.exs" target="_blank" rel="noopener">Instagram</a>
-        <a href="https://www.youtube.com/@cocoonexs" target="_blank" rel="noopener">YouTube</a>
-        <a href="mailto:booking@cocoon-experiences.example">Booking</a>
-      </div>
-    </div>
+    <p class="caption" lang="en">Instrumental psych from Fussa, west Tokyo.</p>
+    <p class="caption">contact: <a href="mailto:cocoon.exs@gmail.com">cocoon.exs@gmail.com</a></p>
   </div>
 </footer>
 
