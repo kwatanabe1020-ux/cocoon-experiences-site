@@ -16,7 +16,7 @@ INDEX_PATH = os.path.join(ROOT, "index.html")
 
 NAV_ICONS = """<nav class="nav nav--icons">
   <a class="nav-logo" href="/index.html">
-    <img src="/assets/logo.png" alt="Cocoon Experiences">
+    <img src="/assets/logo.png" alt="cocoon exs(cocoon experiences)">
   </a>
   <div class="icon-nav">
     <a class="icon-link" href="https://www.youtube.com/@cocoonexs" target="_blank" rel="noopener" aria-label="YouTube">
@@ -150,7 +150,7 @@ def render_list_page(posts):
 <section class="wrap section-tight">
   {body_inner}
 </section>"""
-    return page_shell("News — Cocoon Experiences", "Cocoon Experiencesからのお知らせ一覧。", body)
+    return page_shell("News — cocoon exs(cocoon experiences)", "cocoon exs(cocoon experiences)からのお知らせ一覧。", body)
 
 
 def render_post_page(post, all_posts):
@@ -182,7 +182,7 @@ def render_post_page(post, all_posts):
 
 {headlines_block}"""
     return page_shell(
-        f'{post["title_ja"]} — Cocoon Experiences',
+        f'{post["title_ja"]} — cocoon exs(cocoon experiences)',
         post["excerpt_ja"],
         body,
     )
