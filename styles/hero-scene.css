@@ -137,6 +137,17 @@
   100% { transform: scaleY(1); opacity: 1; }
 }
 
+/* --- scene paused (see ENABLE_HERO_SCENE in hero-scene.js) ---
+   Forces sun/moon/stars/rain/fog off regardless of the static
+   data-time/data-weather values used while paused. */
+.hero[data-scene-paused="true"] .hero-sun,
+.hero[data-scene-paused="true"] .hero-moon,
+.hero[data-scene-paused="true"] .hero-stars,
+.hero[data-scene-paused="true"] .hero-rain,
+.hero[data-scene-paused="true"] .hero-fog {
+  opacity: 0 !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-stars circle { animation: none !important; opacity: 0.7 !important; }
   .hero-rain,

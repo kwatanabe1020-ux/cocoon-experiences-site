@@ -2,6 +2,17 @@
   const hero = document.querySelector(".hero");
   if (!hero) return;
 
+  // Master switch for the whole time-of-day / weather ambient system
+  // (sun/moon, star twinkle, rain, fog, wind sway, mushroom growth).
+  // Set to true to re-enable dynamic behavior. All the logic below is
+  // left intact on purpose — flip this flag rather than deleting code.
+  const ENABLE_HERO_SCENE = false;
+  // Static scene shown while paused. "evening" keeps the illustration
+  // readable while giving the hero text an easier (moderately dark)
+  // background than the harsher "midday" noon light.
+  const STATIC_TIME = "evening";
+  const STATIC_WEATHER = "sunny"; // neutral: no rain/fog visual attached
+
   const sunEl = hero.querySelector(".hero-sun");
   const moonEl = hero.querySelector(".hero-moon");
   const params = new URLSearchParams(location.search);
@@ -105,18 +116,36 @@
     positionBody(moonEl, moonProgress(state.hourFloat), 22, 12);
   }
 
-  apply(computeState());
+  // Fixed, non-animated scene used while ENABLE_HERO_SCENE is false:
+  // no sun/moon/stars, no rain/fog, no mushroom growth — just the
+  // still illustration under a constant time-of-day tint.
+  function applyStaticScene() {
+    hero.dataset.time = STATIC_TIME;
+    hero.dataset.weather = STATIC_WEATHER;
+    hero.dataset.mushroom = "false";
+    hero.dataset.scenePaused = "true";
+  }
 
-  // Manual test hook — no need to wait for real time/weather to change:
-  //   window.heroScene.set({ time: "night", weather: "rain", mushroom: true })
-  //   window.heroScene.reset()
-  // Or via URL: ?heroTime=night&heroWeather=fog&heroMushroom=1
-  window.heroScene = {
-    set(overrides) {
-      apply(computeState(overrides || {}));
-    },
-    reset() {
-      apply(computeState({}));
-    },
-  };
+  if (ENABLE_HERO_SCENE) {
+    apply(computeState());
+
+    // Manual test hook — no need to wait for real time/weather to change:
+    //   window.heroScene.set({ time: "night", weather: "rain", mushroom: true })
+    //   window.heroScene.reset()
+    // Or via URL: ?heroTime=night&heroWeather=fog&heroMushroom=1
+    window.heroScene = {
+      set(overrides) {
+        apply(computeState(overrides || {}));
+      },
+      reset() {
+        apply(computeState({}));
+      },
+    };
+  } else {
+    applyStaticScene();
+    window.heroScene = {
+      set() {}, // effects paused — see ENABLE_HERO_SCENE above
+      reset: applyStaticScene,
+    };
+  }
 })();
