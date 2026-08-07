@@ -212,15 +212,51 @@ hr.rule { border: none; height: 1px; background: var(--color-border); margin: 0;
 
 /* === News list (hero) === */
 .news-list { max-width: 46ch; margin: 0 auto; }
-.news-empty { color: var(--color-text-sub); font-size: 1rem; margin: 0 0 0.5em; text-shadow: 0 1px 6px rgba(0,0,0,0.5); }
-.news-empty.caption { font-size: var(--text-caption); margin: 0; }
+/* Legibility over the hand-drawn hero illustration comes from layered
+   text-shadow only (no panel behind the text) — a tight near-black
+   edge shadow to define the glyph, plus a soft wide ce-ink halo to
+   sink the surrounding pixels, so the text reads on its own across
+   every time-of-day/weather combination without a hard-edged box. */
+.news-empty {
+  color: var(--color-text);
+  font-size: 1rem;
+  margin: 0 0 0.5em;
+  text-shadow:
+    0 0 2px rgba(26,29,46,0.96),
+    0 1px 3px rgba(26,29,46,0.94),
+    0 1px 7px rgba(26,29,46,0.88),
+    0 2px 18px rgba(26,29,46,0.7);
+}
+.news-empty.caption {
+  font-size: var(--text-caption);
+  margin: 0;
+  text-shadow:
+    0 0 1.5px rgba(26,29,46,0.98),
+    0 1px 2px rgba(26,29,46,0.96),
+    0 1px 5px rgba(26,29,46,0.92),
+    0 1px 11px rgba(26,29,46,0.8);
+}
 .news-row {
   display: flex; gap: 1rem; justify-content: center; align-items: baseline;
   padding: 0.6rem 0; border-top: 1px solid var(--color-border);
 }
 .news-row:last-child { border-bottom: 1px solid var(--color-border); }
-.news-row .date { font-family: var(--font-mono); font-size: var(--text-caption); color: var(--color-text-sub); white-space: nowrap; }
-.news-row a { color: var(--color-text); transition: color var(--beat-half) var(--ease-drift); }
+.news-row .date {
+  font-family: var(--font-mono); font-size: var(--text-caption); color: var(--color-text); white-space: nowrap;
+  text-shadow:
+    0 0 1.5px rgba(26,29,46,0.98),
+    0 1px 2px rgba(26,29,46,0.96),
+    0 1px 5px rgba(26,29,46,0.92),
+    0 1px 11px rgba(26,29,46,0.8);
+}
+.news-row a {
+  color: var(--color-text); transition: color var(--beat-half) var(--ease-drift);
+  text-shadow:
+    0 0 2px rgba(26,29,46,0.96),
+    0 1px 3px rgba(26,29,46,0.94),
+    0 1px 7px rgba(26,29,46,0.88),
+    0 2px 18px rgba(26,29,46,0.7);
+}
 .news-row a:hover, .news-row a:focus-visible { color: var(--ce-amber); }
 .news-all-link { display: inline-block; margin-top: 1rem; font-family: var(--font-mono); font-size: var(--text-caption); letter-spacing: var(--tracking-caption); color: var(--color-text-sub); text-transform: uppercase; }
 .news-all-link:hover, .news-all-link:focus-visible { color: var(--ce-amber); }
