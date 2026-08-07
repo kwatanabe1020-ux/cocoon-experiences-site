@@ -14,7 +14,7 @@
   content: "";
   position: absolute; inset: -12% -25%;
   z-index: -1;
-  background: radial-gradient(58% 55% at 50% 42%, rgba(26,29,46,0.55), transparent 75%);
+  background: radial-gradient(58% 55% at 50% 42%, rgba(26,29,46,0.42), transparent 75%);
   pointer-events: none;
 }
 
