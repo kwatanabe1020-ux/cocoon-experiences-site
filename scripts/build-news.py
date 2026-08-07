@@ -72,8 +72,8 @@ def load_posts():
 def render_homepage_feed(posts):
     if not posts:
         return (
-            '      <p class="news-empty" lang="ja">まだお知らせはありません。最初の便りをお待ちください。</p>\n'
-            '      <p class="news-empty caption" lang="en">No news yet — the first dispatch is on its way.</p>'
+            '      <p class="news-empty" lang="ja">cocoon exs(cocoon experiences) webサイトオープンしました。</p>\n'
+            '      <p class="news-empty caption" lang="en">The cocoon exs (cocoon experiences) website is now open.</p>'
         )
     rows = []
     for p in posts[:5]:
@@ -128,8 +128,8 @@ def page_shell(title, description, body):
 def render_list_page(posts):
     if not posts:
         body_inner = (
-            '<p class="news-empty" lang="ja">まだお知らせはありません。最初の便りをお待ちください。</p>\n'
-            '  <p class="news-empty caption" lang="en">No news yet — the first dispatch is on its way.</p>'
+            '<p class="news-empty" lang="ja">cocoon exs(cocoon experiences) webサイトオープンしました。</p>\n'
+            '  <p class="news-empty caption" lang="en">The cocoon exs (cocoon experiences) website is now open.</p>'
         )
     else:
         cards = []
