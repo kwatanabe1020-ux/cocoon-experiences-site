@@ -16,7 +16,7 @@ INDEX_PATH = os.path.join(ROOT, "index.html")
 
 NAV_ICONS = """<nav class="nav nav--icons">
   <a class="nav-logo" href="/index.html">
-    <img src="/assets/logo.png" alt="cocoon exs(cocoon experiences)">
+    <img src="/assets/logo.png" alt="cocoon exs">
   </a>
   <div class="icon-nav">
     <a class="icon-link" href="https://www.youtube.com/@cocoonexs" target="_blank" rel="noopener" aria-label="YouTube">
@@ -72,8 +72,8 @@ def load_posts():
 def render_homepage_feed(posts):
     if not posts:
         return (
-            '      <p class="news-empty" lang="ja">cocoon experiences webサイトオープンしました！</p>\n'
-            '      <p class="news-empty caption" lang="en">cocoon experiences website is now open!</p>'
+            '      <p class="news-empty" lang="ja">cocoon exs webサイトオープンしました！</p>\n'
+            '      <p class="news-empty caption" lang="en">cocoon exs website is now open!</p>'
         )
     rows = []
     for p in posts[:5]:
@@ -128,8 +128,8 @@ def page_shell(title, description, body):
 def render_list_page(posts):
     if not posts:
         body_inner = (
-            '<p class="news-empty" lang="ja">cocoon experiences webサイトオープンしました！</p>\n'
-            '  <p class="news-empty caption" lang="en">cocoon experiences website is now open!</p>'
+            '<p class="news-empty" lang="ja">cocoon exs webサイトオープンしました！</p>\n'
+            '  <p class="news-empty caption" lang="en">cocoon exs website is now open!</p>'
         )
     else:
         cards = []
@@ -150,7 +150,7 @@ def render_list_page(posts):
 <section class="wrap section-tight">
   {body_inner}
 </section>"""
-    return page_shell("News — cocoon exs(cocoon experiences)", "cocoon exs(cocoon experiences)からのお知らせ一覧。", body)
+    return page_shell("News — cocoon exs", "cocoon exsからのお知らせ一覧。", body)
 
 
 def render_post_page(post, all_posts):
@@ -182,7 +182,7 @@ def render_post_page(post, all_posts):
 
 {headlines_block}"""
     return page_shell(
-        f'{post["title_ja"]} — cocoon exs(cocoon experiences)',
+        f'{post["title_ja"]} — cocoon exs',
         post["excerpt_ja"],
         body,
     )
