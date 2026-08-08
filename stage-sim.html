@@ -41,10 +41,10 @@
     display: flex; justify-content: space-between; align-items: baseline;
     pointer-events: none;
   }
-  header h1 { font-family: var(--font-display); font-weight: 560; font-size: 1.25rem; letter-spacing: 0.02em; }
-  header .caption {
-    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em;
-    color: var(--ce-silk-dim); text-transform: uppercase;
+  header h1 {
+    font-family: var(--font-display); font-weight: 560;
+    font-size: clamp(0.95rem, 4vw, 1.35rem); line-height: 1.2;
+    letter-spacing: 0.01em; text-transform: uppercase;
   }
   .back-link {
     display: inline-block; pointer-events: auto;
@@ -122,8 +122,7 @@
 <header>
   <div>
     <a class="back-link" href="index.html">&larr; COCOON EXS</a>
-    <h1>cocoon exs</h1>
-    <div class="caption">stage simulator — turn the knobs</div>
+    <h1>Stage Simulator &mdash; Turn the Knobs</h1>
   </div>
 </header>
 <button id="soundBtn">SOUND OFF</button>
