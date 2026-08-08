@@ -45,6 +45,20 @@ img { max-width: 100%; display: block; }
   text-transform: uppercase;
 }
 
+/* Article date shown between the "News" caption and the headline in
+   each NEWS section (index.html stage-bleed items). Mono/caption
+   scale in both languages — VLG treats dates as numeric/caption
+   content regardless of language — and muted so the title stays the
+   visual lead. */
+.news-date {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-text-sub);
+  margin-top: 0.5rem;
+}
+
 .wrap { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
 .section { padding: 6rem 0; }
 .section-tight { padding: 3.5rem 0; }

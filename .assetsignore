@@ -6,5 +6,6 @@ wrangler.jsonc
 .gitignore
 design/
 site-renewal-instructions.md
+CLAUDE.md
 .DS_Store
 scripts/build-news.py
