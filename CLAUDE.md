@@ -46,3 +46,31 @@ headline
 
 The `.news-date` CSS rule lives in `styles/global.css` right after
 `.caption`.
+
+## NEWS section rule: credit the photographer/editor when known
+
+When a NEWS article's photo or video has a credited photographer or
+editor, append a credit line to the end of *both* the JA and EN
+description paragraphs (not just one). Skip it entirely if there's no
+one to credit — don't leave a placeholder.
+
+### Markup pattern
+
+```html
+<p lang="ja">…description text.<br><span class="credit">撮影・編集：<a href="https://www.instagram.com/handle/" target="_blank" rel="noopener">Name</a></span></p>
+<p class="caption" lang="en" style="margin-top:0.6rem;">…description text.<br><span class="credit">Filmed &amp; edited by <a href="https://www.instagram.com/handle/" target="_blank" rel="noopener">Name</a></span></p>
+```
+
+- JA phrasing: `撮影・編集：{name}` (adjust the role words — e.g. `撮影：`
+  only — if only one credit applies).
+- EN phrasing: a natural sentence, e.g. `Filmed & edited by {name}`.
+- The credit link always opens in a new tab: `target="_blank"
+  rel="noopener"`.
+- Wrap the credit in `<span class="credit">…</span>`, appended after a
+  `<br>` inside the same paragraph as the description it belongs to —
+  don't make it a separate `<p>`.
+- `.credit` (in `styles/global.css`, right after `.news-date`) renders
+  it small/muted mono in natural case (not uppercased, even when
+  nested inside a `.caption` paragraph) with a subtle underlined link
+  that brightens to `--ce-amber` on hover/focus — reuse that class
+  rather than inventing new styling per article.
