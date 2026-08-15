@@ -85,6 +85,7 @@
   .drawbar .track {
     position: relative; width: 14px; flex: 1;
     background: var(--ce-ink); border: 1px solid var(--ce-line); border-radius: 7px; cursor: ns-resize;
+    touch-action: none;
   }
   .drawbar .grip {
     position: absolute; left: 50%; transform: translateX(-50%);
@@ -99,6 +100,7 @@
     background: var(--ce-ink); border: 1.5px solid var(--ce-line);
     position: relative; cursor: ns-resize;
     transition: box-shadow var(--beat-half) var(--ease-drift);
+    touch-action: none;
   }
   .knob.active { box-shadow: 0 0 20px var(--ce-amber-glow); }
   .knob .pointer {
@@ -271,6 +273,7 @@
 
   let start = performance.now();
   const pts = new Array(N);
+  let lastComputeT = -Infinity; // 乱舞計算の間引き用(下記参照)
 
   function draw(now) {
     const t = (now - start) / 1000;
@@ -320,50 +323,61 @@
     // m=0(線)では効かず、中間でも滑らかに補間される。
     const vScale = 1 + 0.2 * m;
 
-    // ---- スパイク(尖り)の現在位置・強さを1フレーム1回だけ計算 ----
-    if (mo > 0.01) {
-      for (let j = 0; j < SPIKE_N; j++) {
-        let c = (t * SPIKE_DRIFT_DIR[j]) / SPIKE_DRIFT_PERIOD[j] + SPIKE_DRIFT_PHASE[j];
-        c -= Math.floor(c);
-        spikeCenters[j] = c;
-        const raw = Math.max(0, Math.sin((t / SPIKE_PULSE_PERIOD[j]) * Math.PI * 2 + SPIKE_PULSE_PHASE[j]));
-        spikeAmps[j] = raw ** 5; // 鋭いパルス: 大半0付近、瞬間的に立つ
-      }
-    }
+    // ---- 頂点の再計算を間引く ----
+    // 4'が高いほど1600頂点×多項の三角関数計算が重くなり、スマホでは
+    // メインスレッドが詰まってタッチのドラッグ追従が悪くなる(=動かないように
+    // 見える)ことがあった。乱舞が強い間だけ計算頻度を上限40Hzに抑え、
+    // 描画(フェード・線のストローク)は毎フレーム行うことで見た目の滑らかさは
+    // 保ちつつ、タッチイベント処理に割く余裕を確保する。
+    const computeHz = mo > 0.01 ? 40 : Infinity;
+    if (t - lastComputeT >= 1 / computeHz) {
+      lastComputeT = t;
 
-    for (let i = 0; i < N; i++) {
-      const s = i / (N - 1);
-      const cx = x0 + CPTS[i][0] * cw;
-      const cy = y0 + CPTS[i][1] * chh;
-      const lx = x0 + s * cw;
-      let dx = 0, dy = 0;
+      // ---- スパイク(尖り)の現在位置・強さ ----
       if (mo > 0.01) {
-        for (let k = 0; k < FREQS.length; k++) {
-          const f = FREQS[k], w = 1 / (k + 1), dir = k % 2 ? 1 : -1;
-          dx += w * Math.sin(f * 5.3 * s * Math.PI * 2 + PHASES[k] + t * spd * dir);
-          dy += w * Math.cos(f * 4.1 * s * Math.PI * 2 + PHASES[k] * 1.7 - t * spd * 0.9);
-        }
-        dx *= chh * 0.17 * mo / 2.45;
-        dy *= chh * 0.2 * mo / 2.45;
-
-        // ---- スパイクボール変形: 輪郭全体を絶えず毛羽立たせる ----
-        let spike = 0;
         for (let j = 0; j < SPIKE_N; j++) {
-          if (spikeAmps[j] < 0.02) continue;
-          let ds = Math.abs(s - spikeCenters[j]);
-          if (ds > 0.5) ds = 1 - ds; // 一筆書きの始点/終点をまたぐ円環距離
-          if (ds > SPIKE_SIGMA3) continue;
-          spike += spikeAmps[j] * Math.exp(-(ds * ds) / (2 * SPIKE_SIGMA * SPIKE_SIGMA));
-        }
-        if (spike > 0) {
-          const outSign = (cy - yMid) >= 0 ? 1 : -1;
-          dy += spike * outSign * chh * 0.26 * mo;
+          let c = (t * SPIKE_DRIFT_DIR[j]) / SPIKE_DRIFT_PERIOD[j] + SPIKE_DRIFT_PHASE[j];
+          c -= Math.floor(c);
+          spikeCenters[j] = c;
+          const raw = Math.max(0, Math.sin((t / SPIKE_PULSE_PERIOD[j]) * Math.PI * 2 + SPIKE_PULSE_PHASE[j]));
+          spikeAmps[j] = raw ** 5; // 鋭いパルス: 大半0付近、瞬間的に立つ
         }
       }
-      pts[i] = [
-        lx + (cx - lx) * m + dx * dispScale,
-        yMid + (cy - yMid) * m * vScale + dy * dispScale,
-      ];
+
+      for (let i = 0; i < N; i++) {
+        const s = i / (N - 1);
+        const cx = x0 + CPTS[i][0] * cw;
+        const cy = y0 + CPTS[i][1] * chh;
+        const lx = x0 + s * cw;
+        let dx = 0, dy = 0;
+        if (mo > 0.01) {
+          for (let k = 0; k < FREQS.length; k++) {
+            const f = FREQS[k], w = 1 / (k + 1), dir = k % 2 ? 1 : -1;
+            dx += w * Math.sin(f * 5.3 * s * Math.PI * 2 + PHASES[k] + t * spd * dir);
+            dy += w * Math.cos(f * 4.1 * s * Math.PI * 2 + PHASES[k] * 1.7 - t * spd * 0.9);
+          }
+          dx *= chh * 0.17 * mo / 2.45;
+          dy *= chh * 0.2 * mo / 2.45;
+
+          // ---- スパイクボール変形: 輪郭全体を絶えず毛羽立たせる ----
+          let spike = 0;
+          for (let j = 0; j < SPIKE_N; j++) {
+            if (spikeAmps[j] < 0.02) continue;
+            let ds = Math.abs(s - spikeCenters[j]);
+            if (ds > 0.5) ds = 1 - ds; // 一筆書きの始点/終点をまたぐ円環距離
+            if (ds > SPIKE_SIGMA3) continue;
+            spike += spikeAmps[j] * Math.exp(-(ds * ds) / (2 * SPIKE_SIGMA * SPIKE_SIGMA));
+          }
+          if (spike > 0) {
+            const outSign = (cy - yMid) >= 0 ? 1 : -1;
+            dy += spike * outSign * chh * 0.26 * mo;
+          }
+        }
+        pts[i] = [
+          lx + (cx - lx) * m + dx * dispScale,
+          yMid + (cy - yMid) * m * vScale + dy * dispScale,
+        ];
+      }
     }
 
     ctx.lineJoin = 'round';
