@@ -269,8 +269,6 @@
   const spikeCenters = new Array(SPIKE_N);
   const spikeAmps = new Array(SPIKE_N);
 
-  const REDUCE_MOTION = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-
   let start = performance.now();
   const pts = new Array(N);
   let lastComputeT = -Infinity; // 乱舞計算の間引き用(下記参照)
@@ -287,7 +285,9 @@
     // ---- ドローバー割り当て ----
     const m  = 1 - state.db[0];    // 16': 上=0(一本の線) 下=1=繭(元データ) ※反転済み
     const cvv = state.db[1];       // 8' : 0=青 1=赤(中間で黄・緑・紫・橙)
-    const mo = REDUCE_MOTION ? 0 : (1 - state.db[2]);  // 4' : 0=静止 1=激しく乱舞
+    // このページは「ノブを動かして遊ぶ」こと自体が体験の本質のため、
+    // OSのモーション削減設定があっても4'の演出はあえて無効化しない。
+    const mo = 1 - state.db[2];    // 4' : 0=静止 1=激しく乱舞
     // 乱れの速さ。参考動画(30fps撮影でも隣接コマが毎回別形状に見えるほど高速)
     // に合わせ、最大値を従来の約5倍(spd/2πでおよそ8Hz相当)まで引き上げた。
     const spd = 0.4 + mo * 50;
