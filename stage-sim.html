@@ -222,6 +222,8 @@
   // ================= Canvas =================
   const cv = document.getElementById('stage');
   const ctx = cv.getContext('2d');
+  const headerEl = document.querySelector('header');
+  const rackEl = document.getElementById('rack');
   let W = 0, H = 0, DPR = 1;
   function resize() {
     DPR = Math.min(window.devicePixelRatio || 1, 2);
@@ -311,10 +313,21 @@
     ctx.globalCompositeOperation = 'source-over';
 
     // ---- 繭のレイアウト(元データの縦横比を維持して中央配置) ----
+    // スマホ幅(#rackが2列になる560px以下)では、ヘッダーとUIラックの実測位置
+    // から「演出空間」(ラックを除いた残り領域)の縦中央にyMidを合わせる。
+    // デスクトップは従来通りH*0.42を使用(バランス済みのため変更しない)。
+    let yMid;
+    if (W <= 560) {
+      const hRect = headerEl.getBoundingClientRect();
+      const rRect = rackEl.getBoundingClientRect();
+      yMid = (hRect.bottom + rRect.top) / 2;
+    } else {
+      yMid = H * 0.42;
+    }
     const availW = W * 0.86, availH = H * 0.52;
     let cw = availW, chh = cw / ASPECT;
     if (chh > availH) { chh = availH; cw = chh * ASPECT; }
-    const x0 = (W - cw) / 2, yMid = H * 0.42, y0 = yMid - chh / 2;
+    const x0 = (W - cw) / 2, y0 = yMid - chh / 2;
 
     // ---- 点列の計算: 一本の線 → 元データの繭 へのモーフ + 乱舞変位 ----
     const dispScale = 0.15 + 0.85 * m;

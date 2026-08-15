@@ -1,5 +1,11 @@
 .wrangler/
 .DS_Store
+
+# 開発参考用に一時的に置く画像・動画・スクリーンショット類。
+# 今後はここに置くのが基本ルール(CLAUDE.md参照)。
+dev-reference/
+
+# 上記ディレクトリに置き忘れた場合の保険(拡張子/命名パターンでも除外)
 *.MOV
 *.mov
 stagesim1.jpg

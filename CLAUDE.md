@@ -74,3 +74,28 @@ one to credit — don't leave a placeholder.
   nested inside a `.caption` paragraph) with a subtle underlined link
   that brightens to `--ce-amber` on hover/focus — reuse that class
   rather than inventing new styling per article.
+
+## Dev-reference material must never be publicly deployed
+
+Screenshots, videos, and extracted frames used only as a reference
+while implementing a feature (e.g. a target-behavior recording, a
+mobile screenshot showing a layout bug) are **not** part of the site
+and must never end up on the deployed site or in git history.
+
+- Put this kind of file in `dev-reference/` at the project root. That
+  directory is excluded via both `.assetsignore` (so `wrangler deploy`
+  never uploads it) and `.gitignore` (so it never gets committed).
+- `dev-reference/` is the default — don't invent a new location.
+  Delete files from it once they're no longer needed; nothing in
+  there needs to persist.
+- As a safety net (in case a file lands loose at the project root
+  instead), `.assetsignore`/`.gitignore` also exclude common ad-hoc
+  patterns by name: `*.MOV`/`*.mov`, `IMG_*.{png,jpg,jpeg}` (the
+  default iPhone camera-roll naming). Still prefer `dev-reference/`
+  going forward — the pattern-based rules are a backstop, not a
+  substitute.
+- After adding or removing anything from `.assetsignore`, redeploy
+  and verify the excluded file actually 404s on the live site —
+  `wrangler deploy` only re-uploads *changed* files, so an
+  already-published file needs a fresh deploy to be pulled down even
+  after being excluded.
