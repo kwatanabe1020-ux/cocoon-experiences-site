@@ -9,3 +9,9 @@ site-renewal-instructions.md
 CLAUDE.md
 .DS_Store
 scripts/build-news.py
+*.MOV
+*.mov
+stagesim1.jpg
+stagesimu2.jpg
+stagesimu3.jpg
+stagesimu4.jpg

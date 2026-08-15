@@ -175,9 +175,9 @@
   }));
 
   // ================= State =================
-  // 初期状態 = 元データの再現: 16'上(繭) / 8'下(青) / 4'上(静止)
+  // 初期状態 = 元データの再現: 16'下(繭) / 8'下(青) / 4'上(静止)
   const state = {
-    db: [1.0, 0.0, 1.0],   // 16'=形(1:繭 0:線) 8'=色(0:青 1:赤) 4'=動き(1:静 0:乱舞)
+    db: [0.0, 0.0, 1.0],   // 16'=形(下:繭 上:線 ※反転済み) 8'=色(0:青 1:赤) 4'=動き(1:静 0:乱舞)
     echo: 0.35,
     hue: 0.15,
     bpm: 120,
@@ -247,8 +247,27 @@
     { px: 0.50, py: 0.18, period: 6.5, phase: 4.2, hueOff: 0.36 },
   ];
 
-  const FREQS = [3, 7, 13, 23];  // 素数系: 完全には繰り返さない揺らぎ
+  // 素数系: 完全には繰り返さない揺らぎ。参考動画は輪郭全体が高速に毛羽立って
+  // 見えるレベルだったため、空間周波数の項を4→6に増やして密度を上げている。
+  const FREQS = [3, 7, 13, 23, 31, 41];
   const PHASES = FREQS.map(() => Math.random() * Math.PI * 2);
+
+  // 4'最大時の「スパイクボール」変形: 輪郭の一部が縦方向に鋭く尖り、
+  // 位置は時間経過で巡る。素数寄りの周期を重ね、規則的に見えないようにする。
+  // (参考動画では個々の尖りを判別できなかったため、数を増やし明滅も速めて
+  //  輪郭全体が絶えず毛羽立つ密度に寄せている)
+  const SPIKE_N = 5;
+  const SPIKE_SIGMA = 0.03;              // 尖りの幅(sに対する割合)
+  const SPIKE_SIGMA3 = SPIKE_SIGMA * 3.2; // これより遠い点は計算を省略
+  const SPIKE_DRIFT_PERIOD = [11, 17, 23, 29, 37];   // 秒: 尖りが繭を巡る速さ(素数)
+  const SPIKE_DRIFT_DIR = [1, -1, 1, -1, 1];
+  const SPIKE_PULSE_PERIOD = [0.35, 0.5, 0.65, 0.8, 0.95]; // 秒: 尖りの明滅(素数寄り、大幅短縮)
+  const SPIKE_DRIFT_PHASE = Array.from({ length: SPIKE_N }, () => Math.random());
+  const SPIKE_PULSE_PHASE = Array.from({ length: SPIKE_N }, () => Math.random() * Math.PI * 2);
+  const spikeCenters = new Array(SPIKE_N);
+  const spikeAmps = new Array(SPIKE_N);
+
+  const REDUCE_MOTION = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
   let start = performance.now();
   const pts = new Array(N);
@@ -263,10 +282,12 @@
     const pulse = 0.7 + 0.3 * Math.max(0, Math.sin(t * state.bpm / 60 * Math.PI * 2));
 
     // ---- ドローバー割り当て ----
-    const m  = state.db[0];        // 16': 1=繭(元データ) 0=一本の線
+    const m  = 1 - state.db[0];    // 16': 上=0(一本の線) 下=1=繭(元データ) ※反転済み
     const cvv = state.db[1];       // 8' : 0=青 1=赤(中間で黄・緑・紫・橙)
-    const mo = 1 - state.db[2];    // 4' : 0=静止 1=激しく乱舞
-    const spd = 0.4 + mo * 4.6;    // 乱れの速さ(下ほど速い)
+    const mo = REDUCE_MOTION ? 0 : (1 - state.db[2]);  // 4' : 0=静止 1=激しく乱舞
+    // 乱れの速さ。参考動画(30fps撮影でも隣接コマが毎回別形状に見えるほど高速)
+    // に合わせ、最大値を従来の約5倍(spd/2πでおよそ8Hz相当)まで引き上げた。
+    const spd = 0.4 + mo * 50;
 
     // ---- 滲みレイヤー(照明) ----
     const energy = 0.2 + 0.45 * m + 0.35 * mo;
@@ -290,10 +311,26 @@
     const availW = W * 0.86, availH = H * 0.52;
     let cw = availW, chh = cw / ASPECT;
     if (chh > availH) { chh = availH; cw = chh * ASPECT; }
-    const x0 = (W - cw) / 2, yMid = H * 0.40, y0 = yMid - chh / 2;
+    const x0 = (W - cw) / 2, yMid = H * 0.42, y0 = yMid - chh / 2;
 
     // ---- 点列の計算: 一本の線 → 元データの繭 へのモーフ + 乱舞変位 ----
     const dispScale = 0.15 + 0.85 * m;
+    // 16'が最大(m=1)の時、繭の縦サイズを拡大(横は変えない)。ヘッダー/ラックと
+    // 重ならない範囲で余白を残せる拡大率として1.2倍に設定(yMidも合わせて微調整)。
+    // m=0(線)では効かず、中間でも滑らかに補間される。
+    const vScale = 1 + 0.2 * m;
+
+    // ---- スパイク(尖り)の現在位置・強さを1フレーム1回だけ計算 ----
+    if (mo > 0.01) {
+      for (let j = 0; j < SPIKE_N; j++) {
+        let c = (t * SPIKE_DRIFT_DIR[j]) / SPIKE_DRIFT_PERIOD[j] + SPIKE_DRIFT_PHASE[j];
+        c -= Math.floor(c);
+        spikeCenters[j] = c;
+        const raw = Math.max(0, Math.sin((t / SPIKE_PULSE_PERIOD[j]) * Math.PI * 2 + SPIKE_PULSE_PHASE[j]));
+        spikeAmps[j] = raw ** 5; // 鋭いパルス: 大半0付近、瞬間的に立つ
+      }
+    }
+
     for (let i = 0; i < N; i++) {
       const s = i / (N - 1);
       const cx = x0 + CPTS[i][0] * cw;
@@ -301,17 +338,31 @@
       const lx = x0 + s * cw;
       let dx = 0, dy = 0;
       if (mo > 0.01) {
-        for (let k = 0; k < 4; k++) {
+        for (let k = 0; k < FREQS.length; k++) {
           const f = FREQS[k], w = 1 / (k + 1), dir = k % 2 ? 1 : -1;
           dx += w * Math.sin(f * 5.3 * s * Math.PI * 2 + PHASES[k] + t * spd * dir);
           dy += w * Math.cos(f * 4.1 * s * Math.PI * 2 + PHASES[k] * 1.7 - t * spd * 0.9);
         }
-        dx *= chh * 0.11 * mo / 2.09;
-        dy *= chh * 0.13 * mo / 2.09;
+        dx *= chh * 0.17 * mo / 2.45;
+        dy *= chh * 0.2 * mo / 2.45;
+
+        // ---- スパイクボール変形: 輪郭全体を絶えず毛羽立たせる ----
+        let spike = 0;
+        for (let j = 0; j < SPIKE_N; j++) {
+          if (spikeAmps[j] < 0.02) continue;
+          let ds = Math.abs(s - spikeCenters[j]);
+          if (ds > 0.5) ds = 1 - ds; // 一筆書きの始点/終点をまたぐ円環距離
+          if (ds > SPIKE_SIGMA3) continue;
+          spike += spikeAmps[j] * Math.exp(-(ds * ds) / (2 * SPIKE_SIGMA * SPIKE_SIGMA));
+        }
+        if (spike > 0) {
+          const outSign = (cy - yMid) >= 0 ? 1 : -1;
+          dy += spike * outSign * chh * 0.26 * mo;
+        }
       }
       pts[i] = [
         lx + (cx - lx) * m + dx * dispScale,
-        yMid + (cy - yMid) * m + dy * dispScale,
+        yMid + (cy - yMid) * m * vScale + dy * dispScale,
       ];
     }
 
