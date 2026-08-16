@@ -190,6 +190,75 @@
   }
   .drawbar.active .grip { box-shadow: 0 0 10px var(--ce-amber-glow); }
 
+  /* フットスイッチ×3: 16'/8'/4'ドローバーの自動往復ON/OFF。当たり判定は
+     ドローバーと同じ列に揃え、LEDは画像の焼き込み位置に正確に重ねる */
+  .fs {
+    position: absolute; top: 66.89%; height: 17.28%; width: 24%;
+    transform: translateX(-50%);
+    background: transparent; border: none; padding: 0; margin: 0; cursor: pointer;
+    -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  }
+  .fs[data-fs="0"] { left: 18.21%; }
+  .fs[data-fs="1"] { left: 49.55%; }
+  .fs[data-fs="2"] { left: 81.16%; }
+  .fs-led {
+    position: absolute; top: 69.34%;
+    width: 1.6%; aspect-ratio: 1 / 1; height: auto;
+    transform: translate(-50%, -50%);
+    border-radius: 50%; background: #4a1712; pointer-events: none; z-index: 2;
+    transition: background var(--beat-half) var(--ease-drift), box-shadow var(--beat-half) var(--ease-drift);
+  }
+  .fs-led[data-fs="0"] { left: 18.21%; }
+  .fs-led[data-fs="1"] { left: 49.55%; }
+  .fs-led[data-fs="2"] { left: 81.16%; }
+  .fs-led.on { background: #e84838; box-shadow: 0 0 6px rgba(232, 72, 56, 0.75); }
+
+  /* ロッカーペダル×4: ノブと同じ縦相対ドラッグで踏み込み量(0-1)を操作。
+     画像は等間隔4分割にほぼ一致するため、当たり判定もそれに揃える */
+  .rocker {
+    position: absolute; top: 85.84%; height: 14.16%; width: 25%;
+    background: transparent; cursor: ns-resize; touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .rocker[data-pedal="0"] { left: 0%; }
+  .rocker[data-pedal="1"] { left: 25%; }
+  .rocker[data-pedal="2"] { left: 50%; }
+  .rocker[data-pedal="3"] { left: 75%; }
+  .rocker-glow {
+    position: absolute; inset: 6% 8%;
+    border-radius: 4px;
+    background: radial-gradient(ellipse at 50% 35%, var(--ce-amber-glow) 0%, rgba(224, 154, 62, 0) 72%);
+    opacity: 0.15;
+    pointer-events: none;
+  }
+  #valPedal { z-index: 5; }
+
+  /* MASTER LEVEL右のPEDAL/TUNERボタン */
+  .mode-btn {
+    position: absolute; top: 9.5%; height: 6%; width: 7%;
+    transform: translateX(-50%);
+    background: transparent; border: 1.5px solid transparent; border-radius: 4px;
+    padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+    transition: border-color var(--beat-half) var(--ease-drift), box-shadow var(--beat-half) var(--ease-drift);
+  }
+  #btnPedal { left: 75.63%; }
+  #btnTuner { left: 91.67%; }
+  .mode-btn.on { border-color: var(--ce-amber); box-shadow: 0 0 10px var(--ce-amber-glow); }
+
+  /* TUNERモード時に表示する基準ピッチ/BPMの読み上げパネル */
+  .tuner-panel {
+    position: absolute; top: 15.8%; left: 83.5%; width: 30%;
+    transform: translateX(-50%);
+    background: rgba(15, 16, 24, 0.88); color: var(--ce-silk);
+    border: 1px solid rgba(237, 228, 211, 0.25); border-radius: 4px;
+    padding: 3px 6px; text-align: center;
+    font-family: var(--font-mono); font-size: 0.5rem; line-height: 1.35;
+    opacity: 0; pointer-events: none; z-index: 5;
+    transition: opacity var(--beat-half) var(--ease-drift);
+  }
+  .tuner-panel.on { opacity: 1; }
+  .tuner-title { color: var(--ce-amber); letter-spacing: 0.1em; font-size: 0.4375rem; }
+
   /* Dub Mixer (assets/stage-sim/dub-mixer-panel.png, 983x975) — つまみの
      指針は画像から除去済み(inpaint)なので、可動部の描画だけ重ねればよい */
   .stage-dub { aspect-ratio: 983 / 975; }
@@ -238,7 +307,7 @@
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .unit, .knob, .drawbar .grip { transition: none; }
+    .unit, .knob, .drawbar .grip, .fs-led, .mode-btn, .tuner-panel { transition: none; }
   }
 </style>
 </head>
@@ -266,6 +335,14 @@
       <div class="knob" id="knobMaster"><div class="pointer"></div><div class="dot"></div></div>
       <div class="pedal-val" id="valMaster">LEVEL 50%</div>
 
+      <button type="button" class="mode-btn" id="btnPedal" aria-label="PEDAL: プリセットを切替"></button>
+      <button type="button" class="mode-btn" id="btnTuner" aria-label="TUNER: 基準ピッチ表示"></button>
+      <div class="tuner-panel" id="tunerPanel" aria-hidden="true">
+        <div class="tuner-title">TUNER</div>
+        <div>A4&nbsp; 442Hz</div>
+        <div id="tunerBpm">♩ = 120 BPM</div>
+      </div>
+
       <div class="organ-lcd" id="lcd16">16' 繭⇄一本の線</div>
       <div class="organ-lcd" id="lcd8">8' 色</div>
       <div class="organ-lcd" id="lcd4">4' 静⇄乱舞</div>
@@ -273,6 +350,19 @@
       <div class="drawbar" data-db="0"><div class="track"><div class="grip"></div></div></div>
       <div class="drawbar" data-db="1"><div class="track"><div class="grip"></div></div></div>
       <div class="drawbar" data-db="2"><div class="track"><div class="grip"></div></div></div>
+
+      <button type="button" class="fs" data-fs="0" aria-label="16' 自動往復"></button>
+      <button type="button" class="fs" data-fs="1" aria-label="8' 自動往復"></button>
+      <button type="button" class="fs" data-fs="2" aria-label="4' 自動往復"></button>
+      <span class="fs-led" data-fs="0" aria-hidden="true"></span>
+      <span class="fs-led" data-fs="1" aria-hidden="true"></span>
+      <span class="fs-led" data-fs="2" aria-hidden="true"></span>
+
+      <div class="rocker" data-pedal="0"><div class="rocker-glow"></div></div>
+      <div class="rocker" data-pedal="1"><div class="rocker-glow"></div></div>
+      <div class="rocker" data-pedal="2"><div class="rocker-glow"></div></div>
+      <div class="rocker" data-pedal="3"><div class="rocker-glow"></div></div>
+      <div class="pedal-val" id="valPedal"></div>
     </div>
   </div>
 
@@ -327,22 +417,75 @@
     bpm: 120,
     masterLevel: 0.5,  // 繭全体のスケール(0.5=現行サイズ、0で最小、1で最大)
     sound: false,
+    fsAuto: [false, false, false],  // 16'/8'/4' フットスイッチ: 自動往復ON/OFF
+    pedal: [0, 0, 0, 0],             // ロッカーペダル1-4の踏み込み量(0-1)
+    paletteIndex: 0,                 // PEDALで選択中の配色セット
+    tunerOn: false,                  // TUNERモードのON/OFF
   };
 
-  // 8' の色の旅: 青(下) → 紫 → 緑 → 黄 → 橙 → 赤(上)
-  const LINE_STOPS = [
-    [0.00, [111, 176, 223]],  // sky blue(元データの青)
-    [0.22, [139, 127, 199]],  // 紫
-    [0.45, [72, 196, 138]],   // 緑
-    [0.62, [224, 196, 62]],   // 黄
-    [0.80, [224, 154, 62]],   // 橙
-    [1.00, [216, 74, 58]],    // 赤
-  ];
-  // 塗りの色: 橙(元データ) → 赤み → 黄(赤い線との対比)
-  const FILL_STOPS = [
-    [0.00, [224, 154, 62]],
-    [0.50, [216, 100, 58]],
-    [1.00, [232, 210, 74]],
+  // PEDAL: 押すたびに巡回する4つの配色セット。8'(HUE)ノブは引き続き
+  // セット内の位置を操作するので、PEDAL=配色セット選択・HUE=その中の位置、
+  // という役割分担になる。すべてVLGトークンの色のみで構成。
+  const PALETTES = [
+    {
+      name: 'EMBER',
+      line: [
+        [0.00, [111, 176, 223]],  // sky
+        [0.22, [139, 127, 199]],  // 紫
+        [0.45, [72, 196, 138]],   // 緑
+        [0.62, [224, 196, 62]],   // 黄
+        [0.80, [224, 154, 62]],   // amber
+        [1.00, [216, 74, 58]],    // 赤
+      ],
+      fill: [
+        [0.00, [224, 154, 62]],
+        [0.50, [216, 100, 58]],
+        [1.00, [232, 210, 74]],
+      ],
+    },
+    {
+      name: 'MOSS NIGHT',
+      line: [
+        [0.00, [111, 176, 223]],  // sky
+        [0.30, [62, 92, 79]],     // moss
+        [0.65, [38, 43, 64]],     // ink-soft
+        [1.00, [180, 175, 165]],  // dim silk
+      ],
+      fill: [
+        [0.00, [62, 92, 79]],     // moss
+        [0.50, [111, 176, 223]],  // sky
+        [1.00, [163, 157, 145]],  // dim silk
+      ],
+    },
+    {
+      name: 'SILK MONO',
+      line: [
+        [0.00, [90, 86, 78]],
+        [0.50, [163, 157, 145]],
+        [1.00, [237, 228, 211]],  // silk
+      ],
+      fill: [
+        [0.00, [70, 66, 60]],
+        [0.50, [150, 144, 132]],
+        [1.00, [237, 228, 211]],  // silk
+      ],
+    },
+    {
+      name: 'FULL SPECTRUM',
+      line: [
+        [0.00, [111, 176, 223]],  // sky
+        [0.25, [62, 92, 79]],     // moss
+        [0.50, [224, 154, 62]],   // amber
+        [0.75, [237, 228, 211]],  // silk
+        [1.00, [26, 29, 46]],     // ink
+      ],
+      fill: [
+        [0.00, [224, 154, 62]],   // amber
+        [0.33, [111, 176, 223]],  // sky
+        [0.66, [62, 92, 79]],     // moss
+        [1.00, [237, 228, 211]],  // silk
+      ],
+    },
   ];
   function stopsAt(stops, v) {
     v = Math.min(1, Math.max(0, v));
@@ -415,12 +558,50 @@
   const spikeCenters = new Array(SPIKE_N);
   const spikeAmps = new Array(SPIKE_N);
 
+  // フットスイッチの自動往復・ロッカーペダル4番目の「ランダム」用パラメータ。
+  // 16'/8'/4'それぞれに固有の素数拍(7/11/13拍)+固有の位相を持たせ、
+  // 複数のsin波を重ねることで非反復な揺らぎにする(4'の乱舞変形と同じ考え方)。
+  const BEAT_SEC = 0.5; // --beat: 500ms と一致
+  const FS_PRIME_BEATS = [7, 11, 13];
+  const FS_PRIME_BEATS2 = [13, 7, 11];
+  const FS_RAND_PHASE = FS_PRIME_BEATS.map(() => Math.random() * Math.PI * 2);
+  const FS_RAND_PHASE2 = FS_PRIME_BEATS.map(() => Math.random() * Math.PI * 2);
+  const fsIndPhase = [0, 0, 0];   // 個別速度(ペダル1-3)モードの位相
+  const fsRandPhase1 = [0, 0, 0]; // ランダム(ペダル4)モード sin項1の位相
+  const fsRandPhase2 = [0, 0, 0]; // ランダム(ペダル4)モード sin項2の位相
+  const drawbarRenders = [null, null, null]; // 各ドローバーのDOM更新関数(下のControlsで登録)
+
   let start = performance.now();
   const pts = new Array(N);
   let lastComputeT = -Infinity; // 乱舞計算の間引き用(下記参照)
+  let lastFrameT = 0;
 
   function draw(now) {
     const t = (now - start) / 1000;
+    const dt = Math.max(0, Math.min(0.1, t - lastFrameT)); // タブ復帰等の異常dtを丸める
+    lastFrameT = t;
+
+    // ---- フットスイッチの自動往復: 16'/8'/4'それぞれ独立に更新 ----
+    // ペダル1-3(個別速度)とペダル4(ランダム、素数拍ベース)を、ペダル4の
+    // 踏み込み量で滑らかにブレンドする(踏むほどランダムが優先される)。
+    for (let i = 0; i < 3; i++) {
+      if (!state.fsAuto[i]) continue;
+      const indSpeed = 0.15 + state.pedal[i] * 1.6;
+      fsIndPhase[i] += dt * indSpeed;
+      const individualValue = (Math.sin(fsIndPhase[i]) + 1) / 2;
+
+      const randSpeedMul = 0.5 + state.pedal[3] * 4;
+      fsRandPhase1[i] += dt * randSpeedMul * (2 * Math.PI / (FS_PRIME_BEATS[i] * BEAT_SEC));
+      fsRandPhase2[i] += dt * randSpeedMul * (2 * Math.PI / (FS_PRIME_BEATS2[i] * BEAT_SEC)) * 0.87;
+      let randomValue = 0.5
+        + 0.35 * Math.sin(fsRandPhase1[i] + FS_RAND_PHASE[i])
+        + 0.15 * Math.sin(fsRandPhase2[i] + FS_RAND_PHASE2[i]);
+      randomValue = Math.min(1, Math.max(0, randomValue));
+
+      state.db[i] = individualValue + (randomValue - individualValue) * state.pedal[3];
+      if (drawbarRenders[i]) drawbarRenders[i]();
+    }
+    if (state.fsAuto.some(Boolean)) updateAudio();
 
     const fade = 0.34 - state.echo * 0.30;
     ctx.fillStyle = `rgba(${INK.join(',')},${fade.toFixed(3)})`;
@@ -489,10 +670,11 @@
     // ---- 頂点の再計算を間引く ----
     // 4'が高いほど1600頂点×多項の三角関数計算が重くなり、スマホでは
     // メインスレッドが詰まってタッチのドラッグ追従が悪くなる(=動かないように
-    // 見える)ことがあった。乱舞が強い間だけ計算頻度を上限40Hzに抑え、
-    // 描画(フェード・線のストローク)は毎フレーム行うことで見た目の滑らかさは
-    // 保ちつつ、タッチイベント処理に割く余裕を確保する。
-    const computeHz = mo > 0.01 ? 40 : Infinity;
+    // 見える)ことがあった。乱舞が強い間、またはフットスイッチの自動往復で
+    // 16'/8'が動いている間だけ計算頻度を上限40Hzに抑え、描画(フェード・線の
+    // ストローク)は毎フレーム行うことで見た目の滑らかさは保ちつつ、タッチ
+    // イベント処理に割く余裕を確保する。
+    const computeHz = (mo > 0.01 || state.fsAuto.some(Boolean)) ? 40 : Infinity;
     if (t - lastComputeT >= 1 / computeHz) {
       lastComputeT = t;
 
@@ -572,7 +754,8 @@
     ctx.lineCap = 'round';
 
     // ---- 塗り(元データのオレンジ位置に配置。透過⇄塗りの明滅は4'の激しさに連動) ----
-    const fc = stopsAt(FILL_STOPS, cvv);
+    const palette = PALETTES[state.paletteIndex];
+    const fc = stopsAt(palette.fill, cvv);
     for (const F of FILLS) {
       const flick = Math.max(0, Math.sin(t * F.sp * (0.5 + mo * 2.5) + F.ph));
       const alpha = (1 - mo) * 0.85 + mo * flick * 0.85;   // 静止時=元データ通りの塗り
@@ -588,7 +771,7 @@
     }
 
     // ---- 一筆書きの線(グロー+本線) ----
-    const lc = stopsAt(LINE_STOPS, cvv);
+    const lc = stopsAt(palette.line, cvv);
     ctx.strokeStyle = `rgba(${lc.join(',')},${(0.07 + 0.07 * pulse).toFixed(3)})`;
     ctx.lineWidth = 5;
     ctx.beginPath();
@@ -662,6 +845,12 @@
       const r = track.getBoundingClientRect();
       const y = (e.clientY - r.top) / r.height;
       state.db[idx] = Math.min(1, Math.max(0, 1 - y));
+      // ドローバーを直接つまむと、そのフットスイッチの自動往復は解除して
+      // 手動操作を優先する(モーター付きフェーダーを手で止める挙動と同じ)
+      if (state.fsAuto[idx]) {
+        state.fsAuto[idx] = false;
+        document.querySelector(`.fs-led[data-fs="${idx}"]`)?.classList.remove('on');
+      }
       render(); updateAudio();
     }
     track.addEventListener('pointerdown', (e) => {
@@ -673,6 +862,71 @@
       track.addEventListener('pointerup', up);
     });
     render();
+    drawbarRenders[idx] = render;
+  });
+
+  // ---- フットスイッチ×3: クリック/タップでON/OFFをトグル ----
+  document.querySelectorAll('.fs').forEach((btn) => {
+    const idx = +btn.dataset.fs;
+    const led = document.querySelector(`.fs-led[data-fs="${idx}"]`);
+    btn.addEventListener('click', () => {
+      state.fsAuto[idx] = !state.fsAuto[idx];
+      led.classList.toggle('on', state.fsAuto[idx]);
+    });
+  });
+
+  // ---- ロッカーペダル×4: ノブと同じ縦相対ドラッグで踏み込み量(0-1)を操作 ----
+  const ROCKER_LEFT = [12.5, 37.5, 62.5, 87.5]; // 各ペダルの中心位置(%)、ツールチップ表示に使う
+  const valPedalEl = document.getElementById('valPedal');
+  document.querySelectorAll('.rocker').forEach((el) => {
+    const idx = +el.dataset.pedal;
+    const glow = el.querySelector('.rocker-glow');
+    function render() {
+      const v = state.pedal[idx];
+      glow.style.opacity = (0.15 + v * 0.85).toFixed(2);
+    }
+    el.addEventListener('pointerdown', (e) => {
+      el.setPointerCapture(e.pointerId);
+      valPedalEl.style.left = ROCKER_LEFT[idx] + '%';
+      valPedalEl.style.top = '84%';
+      valPedalEl.textContent = `${Math.round(state.pedal[idx] * 100)}%`;
+      valPedalEl.style.opacity = '1';
+      let lastY = e.clientY;
+      const move = (ev) => {
+        const dy = lastY - ev.clientY;
+        lastY = ev.clientY;
+        state.pedal[idx] = Math.min(1, Math.max(0, state.pedal[idx] + dy / 150));
+        render();
+        valPedalEl.textContent = `${Math.round(state.pedal[idx] * 100)}%`;
+      };
+      const up = () => {
+        valPedalEl.style.opacity = '0';
+        el.removeEventListener('pointermove', move);
+        el.removeEventListener('pointerup', up);
+      };
+      el.addEventListener('pointermove', move);
+      el.addEventListener('pointerup', up);
+    });
+    render();
+  });
+
+  // ---- PEDAL: 押すたびに配色セットを巡回(EMBER→MOSS NIGHT→SILK MONO→FULL SPECTRUM) ----
+  const btnPedal = document.getElementById('btnPedal');
+  let pedalFlashT = null;
+  btnPedal.addEventListener('click', () => {
+    state.paletteIndex = (state.paletteIndex + 1) % PALETTES.length;
+    btnPedal.classList.add('on');
+    clearTimeout(pedalFlashT);
+    pedalFlashT = setTimeout(() => btnPedal.classList.remove('on'), 260);
+  });
+
+  // ---- TUNER: 基準ピッチ表示のON/OFF ----
+  const btnTuner = document.getElementById('btnTuner');
+  const tunerPanel = document.getElementById('tunerPanel');
+  btnTuner.addEventListener('click', () => {
+    state.tunerOn = !state.tunerOn;
+    btnTuner.classList.toggle('on', state.tunerOn);
+    tunerPanel.classList.toggle('on', state.tunerOn);
   });
 
   function bindKnob(id, get, set, fmt, valEl) {
@@ -710,9 +964,14 @@
   bindKnob('knobColor',
     () => state.hue, (v) => (state.hue = v),
     () => `HUE`, 'valColor');
+  const tunerBpmEl = document.getElementById('tunerBpm');
   bindKnob('knobTempo',
     () => (state.bpm - 110) / 20, (v) => (state.bpm = 110 + v * 20),
-    () => `${Math.round(state.bpm)} BPM`, 'valTempo');
+    () => {
+      const bpm = Math.round(state.bpm);
+      if (tunerBpmEl) tunerBpmEl.textContent = `♩ = ${bpm} BPM`;
+      return `${bpm} BPM`;
+    }, 'valTempo');
   bindKnob('knobMaster',
     () => state.masterLevel, (v) => (state.masterLevel = v),
     (v) => `LEVEL ${Math.round(v * 100)}%`, 'valMaster');
