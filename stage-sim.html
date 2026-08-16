@@ -66,34 +66,16 @@
 
   #rack {
     position: absolute; z-index: 2; left: 0; right: 0; bottom: 0;
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
-    padding: 10px 10px calc(12px + env(safe-area-inset-bottom));
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    padding: 10px 16px calc(12px + env(safe-area-inset-bottom));
     background: linear-gradient(to top, rgba(26,29,46,0.92), rgba(26,29,46,0.55) 75%, transparent);
   }
+  /* 4ユニットとも背景除去済みの実機画像をそのまま使う構成のため、枠線/
+     背景パネル/角丸コンテナは持たない。画像だけがラックの背景の上に
+     直接置かれる見た目にする。 */
   .unit {
-    background: var(--ce-ink-soft); border: 1px solid var(--ce-line); border-radius: 10px;
-    padding: 10px 8px 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0;
+    display: flex; align-items: center; justify-content: center; min-width: 0;
   }
-  .unit .name {
-    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
-    color: var(--ce-silk-dim); text-transform: uppercase; white-space: nowrap;
-  }
-  .unit .hint { font-size: 0.625rem; color: var(--ce-silk-dim); text-align: center; line-height: 1.5; }
-
-  .drawbars { display: flex; gap: 10px; align-items: flex-end; height: 84px; }
-  .drawbar { display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; }
-  .drawbar .track {
-    position: relative; width: 14px; flex: 1;
-    background: var(--ce-ink); border: 1px solid var(--ce-line); border-radius: 7px; cursor: ns-resize;
-    touch-action: none;
-  }
-  .drawbar .grip {
-    position: absolute; left: 50%; transform: translateX(-50%);
-    width: 20px; height: 14px; border-radius: 4px; background: var(--ce-silk);
-    transition: box-shadow var(--beat-half) var(--ease-drift);
-  }
-  .drawbar.active .grip { box-shadow: 0 0 16px var(--ce-amber-glow); }
-  .drawbar .lbl { font-family: var(--font-mono); font-size: 0.5625rem; color: var(--ce-silk-dim); }
 
   .knob {
     width: 58px; height: 58px; border-radius: 50%;
@@ -108,11 +90,152 @@
     width: 1.5px; height: 24px; background: var(--ce-amber); transform-origin: 50% 0%;
   }
   .knob .dot { position: absolute; left: 50%; top: 50%; width: 5px; height: 5px; margin: -2.5px; border-radius: 50%; background: var(--ce-silk); }
-  .knob-val { font-family: var(--font-mono); font-size: 0.625rem; color: var(--ce-silk-dim); }
+
+  /* --- 4ユニット共通: 背景除去済みの実機画像をそのまま表示し、操作可能な
+     要素だけを画像上の対応位置にパーセンテージで正確に重ねる。画像自体は
+     無加工・無配色調整。座標は各画像(sim1〜4、背景除去済み・タイトクロップ
+     済み)を実測して算出したもの。 --- */
+  .pedal-stage {
+    position: relative;
+    width: 100%; height: auto;
+  }
+  .pedal-img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    display: block;
+    pointer-events: none; user-select: none; -webkit-user-drag: none;
+  }
+  .pedal-val {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    background: rgba(15, 16, 24, 0.85); color: var(--ce-silk);
+    border: 1px solid rgba(237, 228, 211, 0.25); border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 0.5625rem; white-space: nowrap; z-index: 4;
+    opacity: 0; pointer-events: none;
+    transition: opacity var(--beat-half) var(--ease-drift);
+  }
+
+  /* Hammond (assets/stage-sim/hammond-panel.png, 1104x897) */
+  .stage-organ { aspect-ratio: 1104 / 897; }
+
+  /* DRUMSのBPMに同期する単体LED。画像内のLED位置に、覆い隠せる直径で重ねる */
+  .organ-led {
+    position: absolute; left: 59.96%; top: 6.41%;
+    width: 1.7%; aspect-ratio: 1 / 1; height: auto;
+    transform: translate(-50%, -50%);
+    border-radius: 50%; background: #4a1712; z-index: 2;
+  }
+
+  /* MASTER LEVELノブ。画像のツマミ面を塗り潰し、針(可動部)だけを重ねて描く */
+  .organ-knob-face {
+    position: absolute; left: 66.58%; top: 10.81%;
+    width: 5.25%; aspect-ratio: 1 / 1; height: auto;
+    transform: translate(-50%, -50%);
+    border-radius: 50%; background: #262626; z-index: 1;
+  }
+  #knobMaster {
+    position: absolute; left: 66.58%; top: 10.81%;
+    width: 6.9%; aspect-ratio: 1 / 1; height: auto;
+    transform: translate(-50%, -50%);
+    background: transparent; border: none; box-shadow: none; z-index: 3;
+  }
+  #knobMaster .dot { display: none; }
+  #knobMaster .pointer { width: 6%; height: 40%; }
+  /* LEVEL%の読み上げは常時表示すると画像内の"LEVEL"文字と衝突するほど
+     余白が狭いため、ノブ操作中だけ吹き出しとして浮かせて表示する */
+  #valMaster { left: 66.58%; top: 0.5%; }
+  .pedal-stage:has(#knobMaster.active) #valMaster { opacity: 1; }
+
+  /* LCDラベル: 画像のLCD窓いっぱいに、正しい表記(繭/⇄)で上書きする */
+  .organ-lcd {
+    position: absolute; top: 22.08%; height: 6.24%;
+    background: #979e93; color: var(--ce-ink);
+    border-radius: 3px;
+    font-family: var(--font-mono); font-size: 0.5rem; line-height: 1.2;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; white-space: normal; z-index: 2;
+  }
+  #lcd16 { left: 6.79%; width: 22.83%; }
+  #lcd8  { left: 38.22%; width: 22.64%; }
+  #lcd4  { left: 69.75%; width: 22.83%; }
+
+  /* ドローバー: 画像のスライダー溝+つまみをシャーシ色で塗り潰し、
+     つまみ(可動部)だけを上に描く。溝の外周や筐体は画像そのまま */
+  .drawbar {
+    position: absolute; top: 33.22%; height: 25.86%; width: 5.43%;
+    transform: translateX(-50%);
+  }
+  .drawbar[data-db="0"] { left: 18.21%; }
+  .drawbar[data-db="1"] { left: 49.55%; }
+  .drawbar[data-db="2"] { left: 81.16%; }
+  .drawbar .track {
+    position: relative; width: 100%; height: 100%;
+    background: #252525; border-radius: 3px;
+    cursor: ns-resize; touch-action: none;
+  }
+  .drawbar .track::before {
+    content: ''; position: absolute; left: 50%; top: 2%; bottom: 2%;
+    width: 12%; margin-left: -6%;
+    background: linear-gradient(180deg, #0a0a0a, #1c1c1c);
+    border-radius: 2px;
+  }
+  .drawbar .grip {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    width: 82%; height: 22%; border-radius: 3px;
+    background: repeating-linear-gradient(180deg,
+      var(--ce-silk) 0px, var(--ce-silk) 1.5px,
+      var(--ce-silk-dim) 1.5px, var(--ce-silk-dim) 3px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    transition: box-shadow var(--beat-half) var(--ease-drift);
+  }
+  .drawbar.active .grip { box-shadow: 0 0 10px var(--ce-amber-glow); }
+
+  /* Dub Mixer (assets/stage-sim/dub-mixer-panel.png, 983x975) — つまみの
+     指針は画像から除去済み(inpaint)なので、可動部の描画だけ重ねればよい */
+  .stage-dub { aspect-ratio: 983 / 975; }
+  #knobEcho {
+    position: absolute; left: 50.46%; top: 44.10%;
+    width: 24.92%; aspect-ratio: 1 / 1; height: auto;
+    transform: translate(-50%, -50%);
+    background: transparent; border: none; box-shadow: none;
+  }
+  #knobEcho .dot { display: none; }
+  #knobEcho .pointer { width: 3.5%; height: 40%; }
+  #valEcho { left: 50.46%; top: 29%; }
+  .pedal-stage:has(#knobEcho.active) #valEcho { opacity: 1; }
+
+  /* FX Pedal (assets/stage-sim/fx-pedal-panel.png, 949x839) */
+  .stage-fx { aspect-ratio: 949 / 839; }
+  #knobColor {
+    position: absolute; left: 51.11%; top: 39.33%;
+    width: 21.08%; aspect-ratio: 1 / 1; height: auto;
+    transform: translate(-50%, -50%);
+    background: transparent; border: none; box-shadow: none;
+  }
+  #knobColor .dot { display: none; }
+  #knobColor .pointer { width: 4%; height: 40%; }
+  #valColor { left: 51.11%; top: 25%; }
+  .pedal-stage:has(#knobColor.active) #valColor { opacity: 1; }
+
+  /* Drums (assets/stage-sim/drums-panel.png, 1032x996) */
+  .stage-drums { aspect-ratio: 1032 / 996; }
+  #knobTempo {
+    position: absolute; left: 49.90%; top: 32.13%;
+    width: 25.29%; aspect-ratio: 1 / 1; height: auto;
+    transform: translate(-50%, -50%);
+    background: transparent; border: none; box-shadow: none;
+  }
+  #knobTempo .dot { display: none; }
+  #knobTempo .pointer { width: 3.5%; height: 40%; }
+  #valTempo { left: 49.90%; top: 16%; }
+  .pedal-stage:has(#knobTempo.active) #valTempo { opacity: 1; }
 
   @media (max-width: 560px) {
-    #rack { grid-template-columns: repeat(2, 1fr); }
-    .drawbars { height: 72px; }
+    #rack { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .organ-lcd {
+      top: 21.5%; height: 11%;
+      font-size: 0.3125rem; letter-spacing: -0.02em; line-height: 1.15;
+    }
   }
   @media (prefers-reduced-motion: reduce) {
     .unit, .knob, .drawbar .grip { transition: none; }
@@ -130,36 +253,55 @@
 <button id="soundBtn">SOUND OFF</button>
 
 <div id="rack">
-  <!-- HAMMOND drawbars: 16'=form / 8'=color / 4'=motion -->
+  <!-- HAMMOND drawbars: 16'=form / 8'=color / 4'=motion
+       パネルは背景除去済みの実画像をそのまま使用(無加工)。操作可能な
+       要素だけを画像上の対応位置に重ねている。 -->
   <div class="unit" id="unitOrgan">
-    <div class="name">Hammond SK-2</div>
-    <div class="drawbars">
-      <div class="drawbar" data-db="0"><div class="track"><div class="grip"></div></div><div class="lbl">16'</div></div>
-      <div class="drawbar" data-db="1"><div class="track"><div class="grip"></div></div><div class="lbl">8'</div></div>
-      <div class="drawbar" data-db="2"><div class="track"><div class="grip"></div></div><div class="lbl">4'</div></div>
+    <div class="pedal-stage stage-organ">
+      <img class="pedal-img" src="assets/stage-sim/hammond-panel.png" alt="" aria-hidden="true" draggable="false">
+
+      <span class="organ-led" id="organLed" aria-hidden="true"></span>
+
+      <div class="organ-knob-face" aria-hidden="true"></div>
+      <div class="knob" id="knobMaster"><div class="pointer"></div><div class="dot"></div></div>
+      <div class="pedal-val" id="valMaster">LEVEL 50%</div>
+
+      <div class="organ-lcd" id="lcd16">16' 繭⇄一本の線</div>
+      <div class="organ-lcd" id="lcd8">8' 色</div>
+      <div class="organ-lcd" id="lcd4">4' 静⇄乱舞</div>
+
+      <div class="drawbar" data-db="0"><div class="track"><div class="grip"></div></div></div>
+      <div class="drawbar" data-db="1"><div class="track"><div class="grip"></div></div></div>
+      <div class="drawbar" data-db="2"><div class="track"><div class="grip"></div></div></div>
     </div>
-    <div class="hint">16' 繭⇄一本の線<br>8' 色 / 4' 静⇄乱舞</div>
   </div>
 
-  <div class="unit">
-    <div class="name">Dub Mixer</div>
-    <div class="knob" id="knobEcho"><div class="pointer"></div><div class="dot"></div></div>
-    <div class="knob-val" id="valEcho">ECHO 0%</div>
-    <div class="hint">残像が尾を引く</div>
+  <!-- DUB MIXER: パネルは背景除去済みの実画像をそのまま使用。つまみの
+       指針は画像から除去済み(inpaint)なので、可動部の描画だけ重ねる。 -->
+  <div class="unit" id="unitDub">
+    <div class="pedal-stage stage-dub">
+      <img class="pedal-img" src="assets/stage-sim/dub-mixer-panel.png" alt="" aria-hidden="true" draggable="false">
+      <div class="knob" id="knobEcho"><div class="pointer"></div><div class="dot"></div></div>
+      <div class="pedal-val" id="valEcho">ECHO 0%</div>
+    </div>
   </div>
 
-  <div class="unit">
-    <div class="name">FX Pedal</div>
-    <div class="knob" id="knobColor"><div class="pointer"></div><div class="dot"></div></div>
-    <div class="knob-val" id="valColor">HUE</div>
-    <div class="hint">照明の色が巡る</div>
+  <!-- FX PEDAL: 同上 -->
+  <div class="unit" id="unitFx">
+    <div class="pedal-stage stage-fx">
+      <img class="pedal-img" src="assets/stage-sim/fx-pedal-panel.png" alt="" aria-hidden="true" draggable="false">
+      <div class="knob" id="knobColor"><div class="pointer"></div><div class="dot"></div></div>
+      <div class="pedal-val" id="valColor">HUE</div>
+    </div>
   </div>
 
-  <div class="unit">
-    <div class="name">Drums</div>
-    <div class="knob" id="knobTempo"><div class="pointer"></div><div class="dot"></div></div>
-    <div class="knob-val" id="valTempo">120 BPM</div>
-    <div class="hint">脈動の速さ</div>
+  <!-- DRUMS: 同上 -->
+  <div class="unit" id="unitDrums">
+    <div class="pedal-stage stage-drums">
+      <img class="pedal-img" src="assets/stage-sim/drums-panel.png" alt="" aria-hidden="true" draggable="false">
+      <div class="knob" id="knobTempo"><div class="pointer"></div><div class="dot"></div></div>
+      <div class="pedal-val" id="valTempo">120 BPM</div>
+    </div>
   </div>
 </div>
 
@@ -183,6 +325,7 @@
     echo: 0.35,
     hue: 0.15,
     bpm: 120,
+    masterLevel: 0.5,  // 繭全体のスケール(0.5=現行サイズ、0で最小、1で最大)
     sound: false,
   };
 
@@ -224,6 +367,7 @@
   const ctx = cv.getContext('2d');
   const headerEl = document.querySelector('header');
   const rackEl = document.getElementById('rack');
+  const organLedEl = document.getElementById('organLed');
   let W = 0, H = 0, DPR = 1;
   function resize() {
     DPR = Math.min(window.devicePixelRatio || 1, 2);
@@ -284,6 +428,15 @@
 
     const pulse = 0.7 + 0.3 * Math.max(0, Math.sin(t * state.bpm / 60 * Math.PI * 2));
 
+    // ---- MASTER脇の単体LED: DRUMSのBPMにそのまま同期して明滅 ----
+    if (organLedEl) {
+      const b = (pulse - 0.7) / 0.3; // 0(消灯寄り)〜1(点灯)に正規化
+      const off = [74, 23, 18], on = [232, 72, 58]; // LEDのみVLG外の色を許容(合意済み)
+      const c = off.map((v, i) => Math.round(v + (on[i] - v) * b));
+      organLedEl.style.background = `rgb(${c.join(',')})`;
+      organLedEl.style.boxShadow = b > 0.4 ? `0 0 ${(b * 6).toFixed(1)}px rgba(232,72,58,${(b * 0.8).toFixed(2)})` : 'none';
+    }
+
     // ---- ドローバー割り当て ----
     const m  = 1 - state.db[0];    // 16': 上=0(一本の線) 下=1=繭(元データ) ※反転済み
     const cvv = state.db[1];       // 8' : 0=青 1=赤(中間で黄・緑・紫・橙)
@@ -313,17 +466,14 @@
     ctx.globalCompositeOperation = 'source-over';
 
     // ---- 繭のレイアウト(元データの縦横比を維持して中央配置) ----
-    // スマホ幅(#rackが2列になる560px以下)では、ヘッダーとUIラックの実測位置
-    // から「演出空間」(ラックを除いた残り領域)の縦中央にyMidを合わせる。
-    // デスクトップは従来通りH*0.42を使用(バランス済みのため変更しない)。
-    let yMid;
-    if (W <= 560) {
-      const hRect = headerEl.getBoundingClientRect();
-      const rRect = rackEl.getBoundingClientRect();
-      yMid = (hRect.bottom + rRect.top) / 2;
-    } else {
-      yMid = H * 0.42;
-    }
+    // ヘッダーとUIラックの実測位置を常に取得しておく: スマホ幅の中央配置と、
+    // MASTER LEVELによる拡大が演出空間からはみ出さない安全域の算出の両方に使う。
+    const hRect = headerEl.getBoundingClientRect();
+    const rRect = rackEl.getBoundingClientRect();
+    // スマホ幅(#rackが2列になる560px以下)では、その実測位置から「演出空間」
+    // (ラックを除いた残り領域)の縦中央にyMidを合わせる。デスクトップは従来通り
+    // H*0.42を使用(バランス済みのため変更しない)。
+    const yMid = (W <= 560) ? (hRect.bottom + rRect.top) / 2 : H * 0.42;
     const availW = W * 0.86, availH = H * 0.52;
     let cw = availW, chh = cw / ASPECT;
     if (chh > availH) { chh = availH; cw = chh * ASPECT; }
@@ -357,6 +507,29 @@
         }
       }
 
+      // ---- MASTER LEVEL: 繭全体のスケール(中心から一様に拡縮) ----
+      // masterLevel=0.5(初期値)でscale=1(現行の見た目のまま)。0で最小、1で最大。
+      // 16'の縦専用拡大(vScale)とは独立して、最後に全体へ一律で掛ける。
+      // 拡大方向(nominalScale>1)は、ヘッダー/ラックとの実測クリアランスを
+      // 超えないよう動的にクランプする。16'最大(vScale=1.2)とMASTER LEVEL
+      // 最大が重なると固定倍率(1.7倍)では画面からはみ出すことを実測で確認した
+      // ための対策。縮小方向(nominalScale<1)は常に安全なのでクランプ不要。
+      const cxCenter = x0 + cw / 2;
+      const nominalScale = 1 + (state.masterLevel - 0.5) * 1.4;
+      let masterScale = nominalScale;
+      if (nominalScale > 1) {
+        const halfH = (chh / 2) * vScale, halfW = cw / 2;
+        const SAFETY = 0.9; // 変位/スパイクによるはみ出し分の余裕
+        const MARGIN = 12;  // px, ヘッダー/ラック/画面端との最低余白
+        const clearTop = Math.max(1, yMid - hRect.bottom - MARGIN) * SAFETY;
+        const clearBottom = Math.max(1, rRect.top - yMid - MARGIN) * SAFETY;
+        const clearSide = Math.max(1, Math.min(cxCenter, W - cxCenter) - MARGIN) * SAFETY;
+        const capV = Math.min(clearTop, clearBottom) / halfH;
+        const capH = clearSide / halfW;
+        const masterScaleCap = Math.max(1, Math.min(capV, capH));
+        masterScale = Math.min(nominalScale, masterScaleCap);
+      }
+
       for (let i = 0; i < N; i++) {
         const s = i / (N - 1);
         const cx = x0 + CPTS[i][0] * cw;
@@ -386,9 +559,11 @@
             dy += spike * outSign * chh * 0.26 * mo;
           }
         }
+        const px = lx + (cx - lx) * m + dx * dispScale;
+        const py = yMid + (cy - yMid) * m * vScale + dy * dispScale;
         pts[i] = [
-          lx + (cx - lx) * m + dx * dispScale,
-          yMid + (cy - yMid) * m * vScale + dy * dispScale,
+          cxCenter + (px - cxCenter) * masterScale,
+          yMid + (py - yMid) * masterScale,
         ];
       }
     }
@@ -538,6 +713,9 @@
   bindKnob('knobTempo',
     () => (state.bpm - 110) / 20, (v) => (state.bpm = 110 + v * 20),
     () => `${Math.round(state.bpm)} BPM`, 'valTempo');
+  bindKnob('knobMaster',
+    () => state.masterLevel, (v) => (state.masterLevel = v),
+    (v) => `LEVEL ${Math.round(v * 100)}%`, 'valMaster');
 })();
 </script>
 </body>
