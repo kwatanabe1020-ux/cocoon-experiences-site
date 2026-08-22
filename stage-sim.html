@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>COCOON EXS — Stage Simulator</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=IBM+Plex+Mono:wght@400&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=IBM+Plex+Mono:wght@400&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=IBM+Plex+Mono:wght@400&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap"></noscript>
 <style>
   :root {
     /* === VLG v1.1 Core === */
@@ -332,7 +335,10 @@
        要素だけを画像上の対応位置に重ねている。 -->
   <div class="unit" id="unitOrgan">
     <div class="pedal-stage stage-organ">
-      <img class="pedal-img" src="assets/stage-sim/hammond-panel.png" alt="" aria-hidden="true" draggable="false">
+      <picture>
+        <source srcset="assets/stage-sim/hammond-panel.webp" type="image/webp">
+        <img class="pedal-img" src="assets/stage-sim/hammond-panel.png" alt="" aria-hidden="true" draggable="false" width="1104" height="897" loading="eager" fetchpriority="high">
+      </picture>
 
       <span class="organ-led" id="organLed" aria-hidden="true"></span>
 
@@ -375,7 +381,10 @@
        指針は画像から除去済み(inpaint)なので、可動部の描画だけ重ねる。 -->
   <div class="unit" id="unitDub">
     <div class="pedal-stage stage-dub">
-      <img class="pedal-img" src="assets/stage-sim/dub-mixer-panel.png" alt="" aria-hidden="true" draggable="false">
+      <picture>
+        <source srcset="assets/stage-sim/dub-mixer-panel.webp" type="image/webp">
+        <img class="pedal-img" src="assets/stage-sim/dub-mixer-panel.png" alt="" aria-hidden="true" draggable="false" width="983" height="975" loading="eager">
+      </picture>
       <div class="knob" id="knobEcho"><div class="pointer"></div><div class="dot"></div></div>
       <div class="pedal-val" id="valEcho">ECHO 0%</div>
     </div>
@@ -384,7 +393,10 @@
   <!-- FX PEDAL: 同上 -->
   <div class="unit" id="unitFx">
     <div class="pedal-stage stage-fx">
-      <img class="pedal-img" src="assets/stage-sim/fx-pedal-panel.png" alt="" aria-hidden="true" draggable="false">
+      <picture>
+        <source srcset="assets/stage-sim/fx-pedal-panel.webp" type="image/webp">
+        <img class="pedal-img" src="assets/stage-sim/fx-pedal-panel.png" alt="" aria-hidden="true" draggable="false" width="949" height="839" loading="eager">
+      </picture>
       <div class="knob" id="knobColor"><div class="pointer"></div><div class="dot"></div></div>
       <div class="pedal-val" id="valColor">HUE</div>
     </div>
@@ -393,7 +405,10 @@
   <!-- DRUMS: 同上 -->
   <div class="unit" id="unitDrums">
     <div class="pedal-stage stage-drums">
-      <img class="pedal-img" src="assets/stage-sim/drums-panel.png" alt="" aria-hidden="true" draggable="false">
+      <picture>
+        <source srcset="assets/stage-sim/drums-panel.webp" type="image/webp">
+        <img class="pedal-img" src="assets/stage-sim/drums-panel.png" alt="" aria-hidden="true" draggable="false" width="1032" height="996" loading="eager">
+      </picture>
       <div class="knob" id="knobTempo"><div class="pointer"></div><div class="dot"></div></div>
       <div class="pedal-val" id="valTempo">120 BPM</div>
     </div>

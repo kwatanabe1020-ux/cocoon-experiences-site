@@ -19,8 +19,10 @@
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Shippori+Mincho+B1:wght@600;800&family=Karla:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap"></noscript>
 <link rel="stylesheet" href="styles/global.css">
 <link rel="stylesheet" href="styles/hero-scene.css">
-<link rel="preload" as="image" href="assets/logo.png" imagesrcset="assets/logo.png 1x, assets/logo@2x.png 2x" fetchpriority="high">
-<link rel="preload" as="image" href="assets/photos/hero-forest.jpg" fetchpriority="high">
+<!-- LCP要素はヒーロー背景画像。preloadはこれ1本だけを最優先にし、ロゴの
+     preloadは帯域を奪い合わないようfetchpriorityを付けない(通常優先度)。 -->
+<link rel="preload" as="image" href="assets/photos/hero-forest.avif" imagesrcset="assets/photos/hero-forest.avif" type="image/avif" fetchpriority="high">
+<link rel="preload" as="image" href="assets/logo.webp" imagesrcset="assets/logo.webp 1x, assets/logo@2x.webp 2x">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -41,7 +43,10 @@
 <body>
 
 <header class="hero">
-  <div class="hero-photo" style="background-image:url('assets/photos/hero-forest.jpg');"></div>
+  <picture>
+    <source srcset="assets/photos/hero-forest.avif" type="image/avif">
+    <img class="hero-photo" src="assets/photos/hero-forest.jpg" alt="" width="1332" height="1228" fetchpriority="high" loading="eager" decoding="sync">
+  </picture>
   <div class="hero-tint" aria-hidden="true"></div>
 
   <div class="hero-stars" aria-hidden="true">
@@ -88,7 +93,10 @@
 
   <div class="hero-inner wrap">
     <h1 class="sr-only">cocoon exs</h1>
-    <img class="hero-logo reveal" src="assets/logo.png" srcset="assets/logo.png 1x, assets/logo@2x.png 2x" width="740" height="399" alt="cocoon exs" fetchpriority="high">
+    <picture>
+      <source srcset="assets/logo.webp 1x, assets/logo@2x.webp 2x" type="image/webp">
+      <img class="hero-logo reveal" src="assets/logo.png" srcset="assets/logo.png 1x, assets/logo@2x.png 2x" width="740" height="399" alt="cocoon exs" loading="eager">
+    </picture>
     <div id="news-list" class="news-list reveal">
       <!-- NEWS:START -->
       <p class="news-empty caption" lang="en">instrumental rock from Fussa, west Tokyo — music that unfolds like a film.</p>
@@ -189,7 +197,10 @@
       <time class="news-date" datetime="2026-05">2026年5月 — MAY 2026</time>
       <h2 style="margin-top:0.5rem; margin-bottom:1.2rem;">EMERGENZA JAPAN Semi Final Live At Shibuya Eggman(Full Stage)</h2>
       <a class="photo-frame video-link" href="https://youtu.be/JX5dkktwqeA" target="_blank" rel="noopener" style="display:block; aspect-ratio:1063/591; margin-bottom:1.5rem;">
-        <img src="assets/photos/emergenza-2026-thumb.jpg" alt="cocoon exs - EMERGENZA JAPAN Semi Final Live At Shibuya Eggman" loading="lazy">
+        <picture>
+          <source srcset="assets/photos/emergenza-2026-thumb.webp" type="image/webp">
+          <img src="assets/photos/emergenza-2026-thumb.jpg" alt="cocoon exs - EMERGENZA JAPAN Semi Final Live At Shibuya Eggman" width="1063" height="591" loading="lazy">
+        </picture>
         <span class="play-badge" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         </span>
@@ -204,7 +215,10 @@
       <time class="news-date" datetime="2026-02">2026年2月 — FEBRUARY 2026</time>
       <h2 style="margin-top:0.5rem; margin-bottom:1.2rem;">Live at Shambhala In Your Heart 2026（Full Live)</h2>
       <a class="photo-frame video-link" href="https://youtu.be/hcyckHe2iZQ?si=GuCUkpE580FhIXMj" target="_blank" rel="noopener" style="display:block; aspect-ratio:1179/645; margin-bottom:1.5rem;">
-        <img src="assets/photos/shambhala-2026-thumb.jpg" alt="cocoon exs - Live at Shambhala In Your Heart 2026" loading="lazy">
+        <picture>
+          <source srcset="assets/photos/shambhala-2026-thumb.webp" type="image/webp">
+          <img src="assets/photos/shambhala-2026-thumb.jpg" alt="cocoon exs - Live at Shambhala In Your Heart 2026" width="1179" height="645" loading="lazy">
+        </picture>
         <span class="play-badge" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         </span>
