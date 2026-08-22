@@ -4,6 +4,39 @@ Static HTML/CSS/JS site (no build tooling), deployed to Cloudflare
 Workers static assets. See `design/VLG.md` for the full visual
 language guide.
 
+## Schedule section: always pinned above the NEWS list
+
+`index.html` has a `.schedule-section` block (`-2026 Schedule-`,
+caption "Upcoming") as the **first** `.section` child inside
+`<section class="stage-bleed">`, immediately followed by the regular
+NEWS article `.section` blocks.
+
+- When adding a new NEWS article, always insert it **after** the
+  schedule block, never before it. The schedule stays pinned at the
+  top no matter how many NEWS articles accumulate below it.
+- The schedule is intentionally styled differently from a NEWS
+  article (amber-accented date/caption, framing top/bottom rule,
+  compact row-list instead of prose) — see `.schedule-section` and
+  related rules in `styles/global.css`, right after `.section-tight`.
+  Don't reuse `.news-date`/plain `.caption "News"` for schedule rows;
+  keep using `.schedule-date`/`.schedule-caption` so the two stay
+  visually distinct.
+- Each row: `.schedule-date` (compact `M/D`, IBM Plex Mono, `datetime`
+  attr in full ISO `YYYY-MM-DD`), then `.schedule-main` containing
+  `.schedule-event` (event name, linked with `target="_blank"
+  rel="noopener"` when a URL is known — plain text, no `<a>`, when
+  it isn't) and `.schedule-region` (JA prefecture name + `<span
+  lang="en">EN name</span>`, e.g. `埼玉 <span lang="en">Saitama</span>`).
+- **Past dates are removed manually, not auto-hidden.** When a
+  schedule date has passed, delete that `.schedule-row` outright the
+  next time you're editing this section — there's no JS-driven
+  expiry. This was a deliberate choice to keep the page fully static
+  (no client-side date logic) and to keep the HTML source itself
+  always accurate for crawlers/social-card scrapers that may not
+  execute JS. If asked to add a new schedule entry, it's a good time
+  to also check whether any existing rows are now in the past and
+  flag them for removal.
+
 ## NEWS section rule: always include a date
 
 Every NEWS item on the homepage (the `<section class="stage-bleed">`

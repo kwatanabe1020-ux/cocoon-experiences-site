@@ -90,6 +90,59 @@ img { max-width: 100%; display: block; }
 .section { padding: 6rem 0; }
 .section-tight { padding: 3.5rem 0; }
 
+/* === Schedule (upcoming live dates, always the first .section inside
+   .stage-bleed — see CLAUDE.md) ===
+   Deliberately reads differently from a NEWS article: amber accent
+   instead of muted silk, a framing top/bottom rule, and a compact
+   row-list instead of prose — this is a standing "what's next" panel,
+   not a dated article in the feed. */
+.schedule-section {
+  padding-top: 4.5rem;
+  padding-bottom: 4.5rem;
+  border-top: 1px solid var(--ce-line);
+  border-bottom: 1px solid var(--ce-line);
+  background: linear-gradient(180deg, rgba(224, 154, 62, 0.07), transparent 65%);
+}
+.schedule-caption { color: var(--ce-amber); }
+.schedule-list { margin-top: 1.75rem; display: flex; flex-direction: column; }
+.schedule-row {
+  display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 1.1rem; row-gap: 0.2rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--color-border);
+}
+.schedule-row:last-child { border-bottom: 1px solid var(--color-border); }
+.schedule-date {
+  flex: 0 0 auto;
+  min-width: 3.4rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--ce-amber);
+}
+.schedule-main { flex: 1 1 auto; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 0.6em; row-gap: 0.2rem; min-width: 0; }
+.schedule-event { font-size: 1rem; }
+.schedule-event a {
+  text-decoration: underline;
+  text-decoration-color: var(--color-border);
+  text-underline-offset: 3px;
+  transition: color var(--beat-half) var(--ease-drift), text-decoration-color var(--beat-half) var(--ease-drift);
+}
+.schedule-event a:hover, .schedule-event a:focus-visible {
+  color: var(--ce-amber);
+  text-decoration-color: var(--ce-amber);
+}
+.schedule-region {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-text-sub);
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .schedule-row { column-gap: 0.85rem; }
+  .schedule-date { min-width: 2.9rem; }
+}
+
 hr.rule { border: none; height: 1px; background: var(--color-border); margin: 0; }
 
 /* === Nav === */
