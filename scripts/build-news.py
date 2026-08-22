@@ -42,7 +42,7 @@ NAV_ICONS = """<nav class="nav nav--icons">
 
 FOOTER = """<footer class="footer-minimal">
   <div class="wrap">
-    <p class="caption" lang="en">instrumental rock from Fussa, west Tokyo — music that unfolds like a film.</p>
+    <p class="caption" lang="en">longform instrumental psych from Fussa, west Tokyo — music that unfolds like a film</p>
     <p class="caption">contact: <a href="mailto:cocoon.exs@gmail.com">cocoon.exs@gmail.com</a></p>
   </div>
 </footer>"""
@@ -72,8 +72,8 @@ def load_posts():
 def render_homepage_feed(posts):
     if not posts:
         return (
-            '      <p class="news-empty caption" lang="en">instrumental rock from Fussa, '
-            'west Tokyo — music that unfolds like a film.</p>'
+            '      <p class="news-empty caption" lang="en">longform instrumental psych from Fussa, '
+            'west Tokyo — music that unfolds like a film</p>'
         )
     rows = []
     for p in posts[:5]:
@@ -128,8 +128,8 @@ def page_shell(title, description, body):
 def render_list_page(posts):
     if not posts:
         body_inner = (
-            '<p class="news-empty caption" lang="en">instrumental rock from Fussa, west Tokyo '
-            '— music that unfolds like a film.</p>'
+            '<p class="news-empty caption" lang="en">longform instrumental psych from Fussa, west Tokyo '
+            '— music that unfolds like a film</p>'
         )
     else:
         cards = []
