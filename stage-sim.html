@@ -102,6 +102,11 @@
   .pedal-img {
     position: absolute; inset: 0; width: 100%; height: 100%;
     display: block;
+    /* 背景がうっすら透けることで機材がサイト背景に馴染むよう、元の100%から
+       10ポイント下げている。LCD/ノブ面/ドローバー溝の補正パッチと、LED・
+       ノブ位置インジケーターは、視認性とベタ塗りパッチの整合性を保つため
+       意図的にこの不透明度を継承させず100%のまま維持している(後述)。 */
+    opacity: 0.9;
     pointer-events: none; user-select: none; -webkit-user-drag: none;
   }
   .pedal-val {
