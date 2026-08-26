@@ -108,6 +108,22 @@ one to credit — don't leave a placeholder.
   that brightens to `--ce-amber` on hover/focus — reuse that class
   rather than inventing new styling per article.
 
+### Member Instagram handles (reference, not currently displayed)
+
+The site has no member-bio/credit format yet, so these aren't linked
+anywhere on the live pages — kept here so a future "meet the band"
+section or per-member credit line doesn't need to be re-sourced from
+video descriptions. All at `https://www.instagram.com/{handle}/`.
+
+| Role | Handle |
+| --- | --- |
+| Guitar | `mori.yoshitake` |
+| Guitar | `yamanekorock8080` |
+| Keyboards | `keyichro` |
+| Bass | `yulian_groove` |
+| Drums | `soiwst` |
+| Filming & Editing | `elephantsho_` (already used as the NEWS photo/video credit) |
+
 ## Dev-reference material must never be publicly deployed
 
 Screenshots, videos, and extracted frames used only as a reference
