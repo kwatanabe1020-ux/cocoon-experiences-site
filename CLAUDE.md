@@ -36,6 +36,30 @@ NEWS article `.section` blocks.
   execute JS. If asked to add a new schedule entry, it's a good time
   to also check whether any existing rows are now in the past and
   flag them for removal.
+- **Unannounced dates read "coming soon"; tentative dates get a
+  "(仮)"/"TBC" tag.** Two distinct states:
+  - *No date announced yet* (event confirmed but the organizer hasn't
+    published a date): replace the `<time class="schedule-date"
+    datetime="...">M/D</time>` with `<span class="schedule-date
+    schedule-date--tbd" lang="en">coming soon</span>` — a plain
+    `<span>`, not `<time>`, since there's no valid date to put in a
+    `datetime` attribute. The region stays as-is (we know where it
+    is, just not when).
+  - *Date known but not yet finalized*: keep the normal `<time
+    datetime="YYYY-MM-DD">M/D</time>`, and append the tentative tag
+    inside it: `<span class="schedule-tbc">(仮) <span
+    lang="en">TBC</span></span>` (e.g. `11/14<span
+    class="schedule-tbc">(仮) <span lang="en">TBC</span></span>`).
+    Once the organizer confirms, delete the `.schedule-tbc` span and
+    leave the plain `M/D` — no other structural change needed.
+  - Both `.schedule-date--tbd` and `.schedule-tbc` render in the
+    muted `--color-text-sub` (not the amber used for confirmed
+    dates) so unconfirmed/tentative rows read as visually distinct
+    from firm ones at a glance.
+  - `.schedule-date`'s `min-width` is sized to fit "coming soon"
+    (the longest case) so every row's date column stays the same
+    width regardless of content — don't shrink it back down for
+    short values like `M/D`, that would misalign the rows above/below.
 
 ## NEWS section rule: always include a date
 

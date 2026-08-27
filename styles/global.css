@@ -113,12 +113,19 @@ img { max-width: 100%; display: block; }
 .schedule-row:last-child { border-bottom: 1px solid var(--color-border); }
 .schedule-date {
   flex: 0 0 auto;
-  min-width: 3.4rem;
+  min-width: 6.2rem;
+  white-space: nowrap;
   font-family: var(--font-mono);
   font-size: var(--text-caption);
   letter-spacing: var(--tracking-caption);
   color: var(--ce-amber);
 }
+/* 公式未発表で日付枠に "coming soon" が入る行、または確定日に(仮)/TBCが
+   付く行。確定済みの日付(amber)と視覚的に区別できるよう、控えめな色に
+   落とす。widthは.schedule-dateのmin-widthを"coming soon"基準で統一済み
+   のため、行ごとの幅ズレは発生しない。 */
+.schedule-date--tbd { color: var(--color-text-sub); }
+.schedule-tbc { color: var(--color-text-sub); }
 .schedule-main { flex: 1 1 auto; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 0.6em; row-gap: 0.2rem; min-width: 0; }
 .schedule-event { font-size: 1rem; }
 .schedule-event a {
@@ -140,7 +147,7 @@ img { max-width: 100%; display: block; }
 }
 @media (max-width: 640px) {
   .schedule-row { column-gap: 0.85rem; }
-  .schedule-date { min-width: 2.9rem; }
+  .schedule-date { min-width: 5.4rem; }
 }
 
 hr.rule { border: none; height: 1px; background: var(--color-border); margin: 0; }
