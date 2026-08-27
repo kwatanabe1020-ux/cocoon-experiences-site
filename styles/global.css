@@ -120,14 +120,23 @@ img { max-width: 100%; display: block; }
   letter-spacing: var(--tracking-caption);
   color: var(--ce-amber);
 }
-/* 公式未発表で日付枠に "coming soon" が入る行、または確定日に(仮)/TBCが
-   付く行。確定済みの日付(amber)と視覚的に区別できるよう、控えめな色に
-   落とす。widthは.schedule-dateのmin-widthを"coming soon"基準で統一済み
-   のため、行ごとの幅ズレは発生しない。 */
-.schedule-date--tbd { color: var(--color-text-sub); }
+/* 確定日だが暫定扱いの行(11/14(仮) TBCなど)向け。確定済みの日付(amber)
+   と視覚的に区別できるよう、控えめな色に落とす。widthは.schedule-dateの
+   min-widthを"(仮) TBC"付きの最長ケース基準で確保済みのため、行ごとの
+   幅ズレは発生しない。 */
 .schedule-tbc { color: var(--color-text-sub); }
 .schedule-main { flex: 1 1 auto; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 0.6em; row-gap: 0.2rem; min-width: 0; }
 .schedule-event { font-size: 1rem; }
+/* イベント公式からまだ出演が発表されていない行。日付/地域は確定して
+   いても、名前だけ伏せる必要があるケース向け。通常の.schedule-event
+   (本文フォント・リンク付きが多い)とは違うと分かるよう、日付/地域と
+   同じIBM Plex Mono・控えめな色に落とす(リンクは持たせない)。 */
+.schedule-event--tbd {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-text-sub);
+}
 .schedule-event a {
   text-decoration: underline;
   text-decoration-color: var(--color-border);
