@@ -175,7 +175,6 @@ hr.rule { border: none; height: 1px; background: var(--color-border); margin: 0;
    otherwise unused across the site); stroke-width stays at the VLG-mandated
    1.5 so it reads as one family with the other motifs. */
 .nav-back {
-  position: relative;
   display: inline-flex; align-items: center; justify-content: center;
   width: 44px; height: 44px; margin: -10px;
   color: var(--color-text);
@@ -185,17 +184,6 @@ hr.rule { border: none; height: 1px; background: var(--color-border); margin: 0;
 .nav-back:hover, .nav-back:focus-visible { color: var(--ce-amber); }
 .nav-back:hover svg { transform: translateX(-3px); }
 .nav-back:focus-visible { outline: 2px solid var(--ce-sky); outline-offset: 2px; }
-.nav-back::after {
-  content: attr(aria-label);
-  position: absolute; top: 100%; left: 0; transform: translateY(4px);
-  font-family: var(--font-mono); font-size: var(--text-caption); letter-spacing: var(--tracking-caption);
-  color: var(--color-text-sub); white-space: nowrap;
-  background: var(--ce-ink-soft); border: 1px solid var(--color-border); border-radius: 4px;
-  padding: 3px 7px;
-  opacity: 0; pointer-events: none;
-  transition: opacity var(--beat-half) var(--ease-drift);
-}
-.nav-back:hover::after, .nav-back:focus-visible::after { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
   .nav-back svg { transition: color var(--beat-half) ease; }
   .nav-back:hover svg { transform: none; }
