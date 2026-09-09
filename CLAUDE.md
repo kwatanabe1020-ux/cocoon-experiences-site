@@ -157,6 +157,43 @@ video descriptions. All at `https://www.instagram.com/{handle}/`.
 | Drums | `soiwst` |
 | Filming & Editing | `elephantsho_` (already used as the NEWS photo/video credit) |
 
+## Event detail pages for individual live appearances
+
+When a live appearance is announced with enough detail to be worth
+its own writeup (date/time/venue confirmed, an official event site
+or Instagram to link out to, etc.), create a standalone event page
+instead of cramming everything into the NEWS blurb.
+
+- **Filename**: `event-[event-name]-[year].html` at the project root
+  (e.g. `event-craft-festa-2026.html`). Use a short English/romanized
+  slug for `[event-name]`, not the Japanese event name.
+- **Structure**: reuse the common page template — same `.nav` (logo +
+  Instagram/YouTube), same `<footer>` (`.foot-row`/`.foot-links`) as
+  `about.html`/`epk.html`. Not a fullscreen standalone page like
+  `stage-sim.html`.
+- **Content layout** (see `event-craft-festa-2026.html` as the
+  reference example): header with `.caption` "Event" + event name
+  (JA) + EN name subcaption, then a `.grid-3` of `.card`s for
+  Date/Time/Venue facts, then body copy as JA paragraph + EN
+  `.caption` paragraph (same JA/EN pairing as NEWS articles), then
+  `.btn` pill links to the official site / Instagram (`target="_blank"
+  rel="noopener"`).
+- **Meta tags**: page-specific `<title>` as `cocoon exs — {event
+  name}`, matching `<meta name="description">`/`og:title`/
+  `og:description`/`og:url`. Unlike `about.html`/`epk.html`, do
+  **not** add `<meta name="robots" content="noindex, nofollow">` —
+  event pages are meant to be discoverable and shared.
+- **Link from NEWS**: always add a NEWS entry on `index.html`
+  announcing the appearance, with a `.news-all-link` linking to the
+  new event page (see the pattern already used for the Craft FESTA
+  announcement).
+- **Link from the schedule row**: point `.schedule-event`'s `<a>` at
+  the new event page rather than the event's own official site — the
+  event page itself links out to the official site/Instagram, so
+  routing the schedule row through it keeps one coherent path
+  (schedule → our page → external links) instead of splitting traffic
+  between two link targets for the same row.
+
 ## Dev-reference material must never be publicly deployed
 
 Screenshots, videos, and extracted frames used only as a reference
