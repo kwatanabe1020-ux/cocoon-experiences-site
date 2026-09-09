@@ -106,14 +106,14 @@ img { max-width: 100%; display: block; }
 .schedule-caption { color: var(--ce-amber); }
 .schedule-list { margin-top: 1.75rem; display: flex; flex-direction: column; }
 /* Row is [date+region "meta"][event name]. Desktop keeps them side by
-   side on one line (.schedule-meta never wraps — both its children
-   carry their own min-width — so it stays a fixed-width left column;
-   the event name, flex:1 min-width:0, is what absorbs any leftover
-   wrapping). Below 640px the row switches to two stacked lines
-   instead — meta on top, event name always on its own line — since
-   trying to keep a long event name on the same line as the date on a
-   narrow screen produced awkward mid-word wraps; see the media query
-   below. */
+   side on one line (.schedule-meta never wraps — date and region sit
+   a tight column-gap apart, sized to its own content rather than a
+   shared fixed-width column; the event name, flex:1 min-width:0, is
+   what absorbs any leftover wrapping). Below 640px the row switches
+   to two stacked lines instead — meta on top, event name always on
+   its own line — since trying to keep a long event name on the same
+   line as the date on a narrow screen produced awkward mid-word
+   wraps; see the media query below. */
 .schedule-row {
   display: flex; align-items: baseline; column-gap: 1.1rem;
   padding: 0.9rem 0;
@@ -127,11 +127,10 @@ img { max-width: 100%; display: block; }
 .schedule-row:last-child { border-bottom: 1px solid var(--color-border); }
 .schedule-meta {
   flex: 0 0 auto;
-  display: flex; align-items: baseline; column-gap: 0.6em;
+  display: flex; align-items: baseline; column-gap: 0.35em;
 }
 .schedule-date {
   flex: 0 0 auto;
-  min-width: 6.2rem;
   white-space: nowrap;
   font-family: var(--font-mono);
   font-size: var(--text-caption);
@@ -139,9 +138,7 @@ img { max-width: 100%; display: block; }
   color: var(--ce-amber);
 }
 /* 確定日だが暫定扱いの行(11/14(仮) TBCなど)向け。確定済みの日付(amber)
-   と視覚的に区別できるよう、控えめな色に落とす。widthは.schedule-dateの
-   min-widthを"(仮) TBC"付きの最長ケース基準で確保済みのため、行ごとの
-   幅ズレは発生しない。 */
+   と視覚的に区別できるよう、控えめな色に落とす。 */
 .schedule-tbc { color: var(--color-text-sub); }
 .schedule-region {
   flex: 0 0 auto;
@@ -189,8 +186,7 @@ img { max-width: 100%; display: block; }
      flush-left under the date — same start position as the date
      above it, not indented to trail the meta line. */
   .schedule-event { align-self: stretch; }
-  .schedule-meta { column-gap: 0.5em; }
-  .schedule-date { min-width: 5.4rem; }
+  .schedule-meta { column-gap: 0.3em; }
   .schedule-region { min-width: 4.2rem; }
 }
 

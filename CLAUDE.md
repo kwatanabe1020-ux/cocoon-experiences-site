@@ -75,11 +75,13 @@ NEWS article `.section` blocks.
     `.schedule-event--tbd` also switches to IBM Plex Mono at caption
     size, matching the date/region columns, since "coming soon" is a
     placeholder rather than real headline-weight content.
-  - `.schedule-date`'s `min-width` is sized to comfortably fit the
-    longest date-column content (`M/D(仮) TBC`) so every row's date
-    column stays the same width regardless of content — don't shrink
-    it back down for short values like plain `M/D`, that would
-    misalign the rows above/below.
+  - `.schedule-date` has no fixed `min-width` — it sizes to its own
+    content and sits a tight `column-gap` away from `.schedule-region`
+    (one space's worth), so date and region always read close
+    together regardless of how long the date text is. Rows aren't
+    column-aligned against each other; that trade-off was made
+    deliberately so short dates like `8/29` don't leave a big gap
+    before the region name.
 
 ## NEWS section rule: always include a date
 
