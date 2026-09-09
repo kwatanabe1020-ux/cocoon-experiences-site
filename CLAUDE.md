@@ -21,12 +21,20 @@ NEWS article `.section` blocks.
   Don't reuse `.news-date`/plain `.caption "News"` for schedule rows;
   keep using `.schedule-date`/`.schedule-caption` so the two stay
   visually distinct.
-- Each row: `.schedule-date` (compact `M/D`, IBM Plex Mono, `datetime`
-  attr in full ISO `YYYY-MM-DD`), then `.schedule-main` containing
-  `.schedule-event` (event name, linked with `target="_blank"
-  rel="noopener"` when a URL is known — plain text, no `<a>`, when
-  it isn't) and `.schedule-region` (JA prefecture name + `<span
-  lang="en">EN name</span>`, e.g. `埼玉 <span lang="en">Saitama</span>`).
+- Each row is `.schedule-meta` (a fixed-width, non-wrapping left
+  column: `.schedule-date` — compact `M/D`, IBM Plex Mono, `datetime`
+  attr in full ISO `YYYY-MM-DD` — followed by `.schedule-region`, JA
+  prefecture name + `<span lang="en">EN name</span>`, e.g. `埼玉 <span
+  lang="en">Saitama</span>`), then `.schedule-event` as a sibling
+  (event name, linked with `target="_blank" rel="noopener"` when a
+  URL is known — plain text, no `<a>`, when it isn't). Order is
+  **date → region → event name**, left to right — region sits next to
+  the date, not after the event name, specifically so a long event
+  name wrapping onto a second line never drags the date down with it;
+  date/region stay put as their own column while only the event name
+  reflows. Don't reintroduce the old `.schedule-main` wrapper around
+  event+region — that's what caused the wrapping bug this layout
+  fixes.
 - **Past dates are removed manually, not auto-hidden.** When a
   schedule date has passed, delete that `.schedule-row` outright the
   next time you're editing this section — there's no JS-driven

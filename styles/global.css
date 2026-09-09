@@ -105,12 +105,26 @@ img { max-width: 100%; display: block; }
 }
 .schedule-caption { color: var(--ce-amber); }
 .schedule-list { margin-top: 1.75rem; display: flex; flex-direction: column; }
+/* Row is [date+region "meta" column][event name]. Meta never wraps —
+   both its children carry their own min-width — so it stays a fixed-width
+   left column across every row; only the event name (flex:1, min-width:0)
+   wraps onto extra lines when it's long, keeping date/region aligned
+   instead of the whole row dropping the date onto its own line. */
 .schedule-row {
-  display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 1.1rem; row-gap: 0.2rem;
+  display: flex; align-items: baseline; column-gap: 1.1rem;
   padding: 0.9rem 0;
   border-top: 1px solid var(--color-border);
+  /* .schedule-list is itself a flex container, so each row is a flex
+     item whose default min-width is auto (= its content's max-content
+     width) — without this override a long event name would refuse to
+     shrink and overflow the row instead of wrapping. */
+  min-width: 0;
 }
 .schedule-row:last-child { border-bottom: 1px solid var(--color-border); }
+.schedule-meta {
+  flex: 0 0 auto;
+  display: flex; align-items: baseline; column-gap: 0.6em;
+}
 .schedule-date {
   flex: 0 0 auto;
   min-width: 6.2rem;
@@ -125,8 +139,16 @@ img { max-width: 100%; display: block; }
    min-widthを"(仮) TBC"付きの最長ケース基準で確保済みのため、行ごとの
    幅ズレは発生しない。 */
 .schedule-tbc { color: var(--color-text-sub); }
-.schedule-main { flex: 1 1 auto; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 0.6em; row-gap: 0.2rem; min-width: 0; }
-.schedule-event { font-size: 1rem; }
+.schedule-region {
+  flex: 0 0 auto;
+  min-width: 4.8rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-text-sub);
+  white-space: nowrap;
+}
+.schedule-event { flex: 1 1 auto; min-width: 0; font-size: 1rem; }
 /* イベント公式からまだ出演が発表されていない行。日付/地域は確定して
    いても、名前だけ伏せる必要があるケース向け。通常の.schedule-event
    (本文フォント・リンク付きが多い)とは違うと分かるよう、日付/地域と
@@ -147,16 +169,11 @@ img { max-width: 100%; display: block; }
   color: var(--ce-amber);
   text-decoration-color: var(--ce-amber);
 }
-.schedule-region {
-  font-family: var(--font-mono);
-  font-size: var(--text-caption);
-  letter-spacing: var(--tracking-caption);
-  color: var(--color-text-sub);
-  white-space: nowrap;
-}
 @media (max-width: 640px) {
   .schedule-row { column-gap: 0.85rem; }
+  .schedule-meta { column-gap: 0.5em; }
   .schedule-date { min-width: 5.4rem; }
+  .schedule-region { min-width: 4.2rem; }
 }
 
 hr.rule { border: none; height: 1px; background: var(--color-border); margin: 0; }
