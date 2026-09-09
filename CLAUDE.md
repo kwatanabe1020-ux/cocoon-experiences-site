@@ -28,13 +28,16 @@ NEWS article `.section` blocks.
   lang="en">Saitama</span>`), then `.schedule-event` as a sibling
   (event name, linked with `target="_blank" rel="noopener"` when a
   URL is known — plain text, no `<a>`, when it isn't). Order is
-  **date → region → event name**, left to right — region sits next to
-  the date, not after the event name, specifically so a long event
-  name wrapping onto a second line never drags the date down with it;
-  date/region stay put as their own column while only the event name
-  reflows. Don't reintroduce the old `.schedule-main` wrapper around
-  event+region — that's what caused the wrapping bug this layout
-  fixes.
+  **date → region → event name**. On desktop (>640px) `.schedule-row`
+  keeps date/region and the event name side by side on one line. Below
+  640px it switches to `flex-direction: column` — meta on its own
+  line, event name always on its own line below, flush-left under the
+  date rather than indented — because letting a long event name share
+  a line with the date on a narrow screen produced awkward mid-word
+  wraps; see the media query in `styles/global.css` right after
+  `.schedule-event a:hover`. Don't reintroduce the old `.schedule-main`
+  wrapper around event+region — that's what caused the original
+  wrapping bug this layout fixes.
 - **Past dates are removed manually, not auto-hidden.** When a
   schedule date has passed, delete that `.schedule-row` outright the
   next time you're editing this section — there's no JS-driven

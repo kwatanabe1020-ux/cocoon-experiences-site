@@ -105,11 +105,15 @@ img { max-width: 100%; display: block; }
 }
 .schedule-caption { color: var(--ce-amber); }
 .schedule-list { margin-top: 1.75rem; display: flex; flex-direction: column; }
-/* Row is [date+region "meta" column][event name]. Meta never wraps —
-   both its children carry their own min-width — so it stays a fixed-width
-   left column across every row; only the event name (flex:1, min-width:0)
-   wraps onto extra lines when it's long, keeping date/region aligned
-   instead of the whole row dropping the date onto its own line. */
+/* Row is [date+region "meta"][event name]. Desktop keeps them side by
+   side on one line (.schedule-meta never wraps — both its children
+   carry their own min-width — so it stays a fixed-width left column;
+   the event name, flex:1 min-width:0, is what absorbs any leftover
+   wrapping). Below 640px the row switches to two stacked lines
+   instead — meta on top, event name always on its own line — since
+   trying to keep a long event name on the same line as the date on a
+   narrow screen produced awkward mid-word wraps; see the media query
+   below. */
 .schedule-row {
   display: flex; align-items: baseline; column-gap: 1.1rem;
   padding: 0.9rem 0;
@@ -170,7 +174,21 @@ img { max-width: 100%; display: block; }
   text-decoration-color: var(--ce-amber);
 }
 @media (max-width: 640px) {
-  .schedule-row { column-gap: 0.85rem; }
+  .schedule-row {
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 0.4rem;
+    /* More breathing room than the desktop 0.9rem: each row is now a
+       two-line group (meta + event name) instead of a single line, so
+       the padding needs to read as "space between groups," not just
+       "space between rows." */
+    padding: 1.15rem 0;
+  }
+  /* Event name spans the full row width (rather than shrinking to its
+     own content) so a long title wraps at the row's actual edge,
+     flush-left under the date — same start position as the date
+     above it, not indented to trail the meta line. */
+  .schedule-event { align-self: stretch; }
   .schedule-meta { column-gap: 0.5em; }
   .schedule-date { min-width: 5.4rem; }
   .schedule-region { min-width: 4.2rem; }
