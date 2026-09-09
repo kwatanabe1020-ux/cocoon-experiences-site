@@ -170,8 +170,36 @@ hr.rule { border: none; height: 1px; background: var(--color-border); margin: 0;
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-border);
 }
-.nav-logo { display: flex; align-items: center; gap: 10px; }
-.nav-logo img { height: 34px; width: auto; }
+/* Back-to-home nav icon: ring + chevron ("Tonewheel Back"), replaces the
+   old logo-as-link. The ring is a minimal Tonewheel citation (VLG Motif A,
+   otherwise unused across the site); stroke-width stays at the VLG-mandated
+   1.5 so it reads as one family with the other motifs. */
+.nav-back {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; margin: -10px;
+  color: var(--color-text);
+  transition: color var(--beat-half) var(--ease-drift);
+}
+.nav-back svg { width: 24px; height: 24px; transition: transform var(--beat-half) var(--ease-drift); }
+.nav-back:hover, .nav-back:focus-visible { color: var(--ce-amber); }
+.nav-back:hover svg { transform: translateX(-3px); }
+.nav-back:focus-visible { outline: 2px solid var(--ce-sky); outline-offset: 2px; }
+.nav-back::after {
+  content: attr(aria-label);
+  position: absolute; top: 100%; left: 0; transform: translateY(4px);
+  font-family: var(--font-mono); font-size: var(--text-caption); letter-spacing: var(--tracking-caption);
+  color: var(--color-text-sub); white-space: nowrap;
+  background: var(--ce-ink-soft); border: 1px solid var(--color-border); border-radius: 4px;
+  padding: 3px 7px;
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--beat-half) var(--ease-drift);
+}
+.nav-back:hover::after, .nav-back:focus-visible::after { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .nav-back svg { transition: color var(--beat-half) ease; }
+  .nav-back:hover svg { transform: none; }
+}
 .nav-links { display: flex; gap: 1.75rem; font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; }
 .nav-links a { color: var(--color-text-sub); transition: color var(--beat-half) var(--ease-drift); }
 .nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--ce-amber); }

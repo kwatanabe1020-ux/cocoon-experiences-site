@@ -50,13 +50,19 @@
     letter-spacing: 0.01em; text-transform: uppercase;
   }
   .back-link {
-    display: inline-block; pointer-events: auto;
+    display: inline-flex; align-items: center; gap: 5px; pointer-events: auto;
     font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
     color: var(--ce-silk-dim); text-decoration: none; text-transform: uppercase;
     margin-bottom: 6px;
     transition: color var(--beat-half) var(--ease-drift);
   }
+  .back-link svg { width: 16px; height: 16px; flex-shrink: 0; transition: transform var(--beat-half) var(--ease-drift); }
   .back-link:hover, .back-link:focus-visible { color: var(--ce-amber); }
+  .back-link:hover svg, .back-link:focus-visible svg { transform: translateX(-2px); }
+  @media (prefers-reduced-motion: reduce) {
+    .back-link svg { transition: color var(--beat-half) ease; }
+    .back-link:hover svg { transform: none; }
+  }
   #soundBtn {
     pointer-events: auto; position: absolute; top: 12px; right: 14px; z-index: 3;
     background: var(--ce-ink-soft); color: var(--ce-silk);
@@ -323,7 +329,13 @@
 <canvas id="stage"></canvas>
 <header>
   <div>
-    <a class="back-link" href="index.html">&larr; COCOON EXS</a>
+    <a class="back-link" href="index.html" aria-label="cocoon exsに戻る">
+      <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <circle cx="16" cy="16" r="11" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M19.5 10 L12.5 16 L19.5 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      COCOON EXS
+    </a>
     <h1>Stage Simulator &mdash; Turn the Knobs</h1>
   </div>
 </header>
