@@ -38,15 +38,19 @@ NEWS article `.section` blocks.
   `.schedule-event a:hover`. Don't reintroduce the old `.schedule-main`
   wrapper around event+region — that's what caused the original
   wrapping bug this layout fixes.
-- **Past dates are removed manually, not auto-hidden.** When a
-  schedule date has passed, delete that `.schedule-row` outright the
-  next time you're editing this section — there's no JS-driven
-  expiry. This was a deliberate choice to keep the page fully static
-  (no client-side date logic) and to keep the HTML source itself
-  always accurate for crawlers/social-card scrapers that may not
-  execute JS. If asked to add a new schedule entry, it's a good time
-  to also check whether any existing rows are now in the past and
-  flag them for removal.
+- **Past dates are kept, never deleted or hidden.** Schedule rows
+  (and NEWS articles) whose date has passed stay in place as a visible
+  performance history — don't delete a `.schedule-row` just because
+  its date is in the past, and don't build any JS-driven auto-hide/
+  auto-expiry for it either. The list stays in chronological order
+  (oldest first), so past rows naturally sit above the upcoming ones.
+  To keep upcoming shows scannable at a glance, add `schedule-row--past`
+  to any row whose date has passed — it dims the row and demotes
+  `.schedule-date` from amber to the muted text color (see
+  `styles/global.css`, right after `.schedule-row:last-child`). If
+  asked to add a new schedule entry, it's a good time to also check
+  whether any existing rows are now in the past and add the class to
+  them if it's missing — not to remove them.
 - **Unannounced event names read "coming soon"; tentative dates get a
   "(仮)"/"TBC" tag.** Two distinct states:
   - *Event not officially announced yet* (date and region are known —

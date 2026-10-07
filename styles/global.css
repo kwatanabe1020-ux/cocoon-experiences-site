@@ -125,6 +125,12 @@ img { max-width: 100%; display: block; }
   min-width: 0;
 }
 .schedule-row:last-child { border-bottom: 1px solid var(--color-border); }
+/* Past dates stay in the list as a visible history rather than being
+   deleted (see CLAUDE.md) — dimmed + date demoted from amber to the
+   muted text color so upcoming shows read as the active ones at a
+   glance, without needing a text label. */
+.schedule-row--past { opacity: 0.55; }
+.schedule-row--past .schedule-date { color: var(--color-text-sub); }
 .schedule-meta {
   flex: 0 0 auto;
   display: flex; align-items: baseline; column-gap: 0.35em;
