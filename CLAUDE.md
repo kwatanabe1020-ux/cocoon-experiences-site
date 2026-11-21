@@ -42,9 +42,12 @@ NEWS article `.section` blocks.
   (and NEWS articles) whose date has passed stay in place as a visible
   performance history — don't delete a `.schedule-row` just because
   its date is in the past, and don't build any JS-driven auto-hide/
-  auto-expiry for it either. The list stays in chronological order
-  (oldest first), so past rows naturally sit above the upcoming ones.
-  To keep upcoming shows scannable at a glance, add `schedule-row--past`
+  auto-expiry for it either. The list is in reverse-chronological
+  order (newest first) — the next upcoming date sits at the top, and
+  past rows accumulate going down the page. When adding a new
+  schedule entry, insert the `.schedule-row` in date order among the
+  existing rows rather than appending it at the end. To keep upcoming
+  shows scannable at a glance, add `schedule-row--past`
   to any row whose date has passed — it dims the row and demotes
   `.schedule-date` from amber to the muted text color (see
   `styles/global.css`, right after `.schedule-row:last-child`). If
