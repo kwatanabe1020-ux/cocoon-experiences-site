@@ -461,6 +461,42 @@ hr.rule { border: none; height: 1px; background: var(--color-border); margin: 0;
   width: 100%; height: 100%; object-fit: cover;
   filter: saturate(0.92) contrast(0.96) sepia(0.08);
 }
+/* タップで拡大表示(ライトボックス)。文字の密度が高いポスター・フライヤーなど、
+   原寸のまま見せたい画像に .lightbox-trigger を付けて使う(scripts/lightbox.js)。
+   .photo-frame のボタン版として振る舞うため、ボタンの既定スタイルをリセットする。 */
+.lightbox-trigger {
+  display: block; width: 100%; padding: 0; margin: 0; border: none; background: none;
+  cursor: zoom-in; position: relative; text-align: left;
+}
+.zoom-badge {
+  position: absolute; right: 10px; bottom: 10px;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(26, 29, 46, 0.55); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ce-silk);
+  pointer-events: none;
+}
+.zoom-badge svg { width: 18px; height: 18px; }
+
+dialog.lightbox {
+  border: none; padding: 0; background: transparent;
+  max-width: 94vw; max-height: 94vh;
+}
+dialog.lightbox::backdrop { background: rgba(15, 16, 24, 0.88); }
+dialog.lightbox .lightbox-img {
+  display: block; max-width: 94vw; max-height: 90vh;
+  border-radius: 8px; margin: 0 auto;
+}
+dialog.lightbox .lightbox-close {
+  position: fixed; top: 16px; right: 16px; z-index: 1;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--ce-ink-soft); color: var(--ce-silk);
+  border: 1px solid var(--color-border);
+  font-size: 1.5rem; line-height: 1; cursor: pointer;
+}
+dialog.lightbox .lightbox-close:hover,
+dialog.lightbox .lightbox-close:focus-visible { color: var(--ce-amber); }
+
 .video-link { position: relative; }
 .play-badge {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);

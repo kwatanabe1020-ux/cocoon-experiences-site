@@ -210,6 +210,18 @@ instead of cramming everything into the NEWS blurb.
   routing the schedule row through it keeps one coherent path
   (schedule → our page → external links) instead of splitting traffic
   between two link targets for the same row.
+- **Dense images (posters, timetables)**: when a flyer/poster has
+  small text that needs to be legible up close (a full event poster,
+  a timetable), wrap it in `<button type="button" class="photo-frame
+  lightbox-trigger">` (keeping the usual `<picture>`/`<source
+  type="image/webp">`/`<img>` inside) instead of a plain
+  `.photo-frame` div, and add `scripts/lightbox.js` before `</body>`.
+  This gives a tap-to-zoom `<dialog>` overlay (see
+  `event-omejuku-artfestival-2026.html`). Multiple dense images on one
+  page stack vertically inside a flex column (not side-by-side) since
+  both are typically portrait and lose legibility at half-width on
+  mobile. Keep using plain `.photo-frame` (no lightbox) for ordinary
+  single posters that are already readable at the displayed size.
 
 ## Dev-reference material must never be publicly deployed
 
